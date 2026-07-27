@@ -1,8 +1,8 @@
 <div align="center">
   <img src="https://img.icons8.com/?size=100&id=11306&format=png&color=000000" alt="Calendar Icon" width="80" />
-  <h1>🎓 منظم الجدول الدراسي — جامعة جازان</h1>
+  <h1>🎓 Jazan Uni SUC Manager (JUSM)</h1>
   
-  <p><b>تطبيق ويب تفاعلي ذكي وسريع يُساعد طلاب وطالبات جامعة جازان على ترتيب جداولهم الدراسية باحترافية، وتوليد جميع خيارات الشعب المتاحة آلياً للحصول على أوقات راحة أكثر وتعارضات أقل.</b></p>
+  <p><b>A smart, ultra-fast, and highly interactive web application designed to help Jazan University students build, manage, and share their academic schedules with zero conflicts and maximum days off.</b></p>
 
   <!-- Badges -->
   <p>
@@ -12,77 +12,87 @@
     <img src="https://img.shields.io/badge/Privacy-100%25_Offline-success?style=flat-square" alt="Privacy First" />
   </p>
 
-  <i>تطوير: عبدالعزيز مشنوي | مدعوم بالذكاء الاصطناعي 🤖</i>
+  <i>Developed by: Abdulaziz Mashnawi</i>
 </div>
 
 ---
 
-## 📑 جدول المحتويات
-- [✨ الميزات والخصائص الأساسية](#-الميزات-والخصائص-الأساسية)
-
-- [🚀 كيفية الاستخدام](#-كيفية-الاستخدام)
-- [🛠️ التقنيات المستخدمة وبنية التطبيق](#-التقنيات-المستخدمة-وبنية-التطبيق)
-- [🔒 الخصوصية والأمان](#-الخصوصية-والأمان)
-- [🤝 المساهمة والتطوير](#-المساهمة-والتطوير)
-
----
-
-## ✨ الميزات والخصائص الأساسية
-
-* 🚀 **توليد آلي وذكي للجداول**: حساب واستخراج أفضل الترتيبات للجدول الأكاديمي آلياً مع كشف دقيق وفوري للتعارضات.
-* 📄 **تحليل تلقائي للمقررات المطروحة**: القدرة على قراءة ملف `HTML` المحفوظ مباشرة من نظام بوابة "أكاديميا" (Edugate) واستخراج بيانات المواد والشُعب بشكل لحظي.
-* 🌴 **أقصى عدد من أيام الراحة (الأوف)**: خوارزمية ذكية تقوم بترتيب الخيارات المتاحة لزيادة أيام الراحة الأسبوعية لتقليل عناء الدوام اليومي.
-* 🌙 **دعم الوضعين الليلي والنهاري (Dark/Light Mode)**: دعم كامل للوضع الداكن مع تغيير سلس وانتقالات حركية رائعة وحفظ تلقائي لتفضيلات المستخدم.
-* 🖼️ **تصدير وطباعة الجدول بضغطة زر**: إمكانية تصدير الجدول الدراسي كصورة عالية الدقة PNG، أو طباعته بتنسيق أنيق ومرتب يسهل قراءته.
-* 🔖 **نظام حفظ متقدم (Bookmarks)**: إمكانية حفظ واسترجاع أكثر من جدول مفضل في التخزين المحلي للمتصفح لمقارنة الجداول لاحقاً.
-* 👨‍🏫 **نظام تصفية متقدم**: فلترة الشعب الدراسية بناءً على أعضاء هيئة التدريس المفضلين لك، مما يوفر لك جدولاً مخصصاً لاحتياجاتك تماماً.
-
-
+## 📑 Table of Contents
+- [✨ Key Features](#-key-features)
+- [🎮 The "Baloot Deck" Experience](#-the-baloot-deck-experience)
+- [🚀 How to Use](#-how-to-use)
+- [🛠️ Tech Stack & Architecture](#️-tech-stack--architecture)
+- [🔒 Privacy & Security](#-privacy--security)
+- [🤝 Contributing](#-contributing)
 
 ---
 
-## 🚀 كيفية الاستخدام
+## ✨ Key Features
+
+* 🚀 **Smart Automated Generation:** Automatically calculates and generates all possible schedule combinations, ensuring zero time conflicts.
+* 📄 **Instant Edugate Parsing:** Directly parses `HTML` files saved from the "Edugate" (Academia) system to extract courses, sections, and instructors in real-time.
+* 🌴 **Maximum Days Off:** A smart algorithm prioritizes schedules that maximize your weekly days off, reducing daily commutes.
+* 🔗 **"Nuclear" Link Sharing:** Share your perfect schedule with friends instantly! We built a custom minification algorithm that compresses schedule data into extremely short, shareable URLs.
+* 🌙 **Dynamic Theming (Dark/Light):** Seamless Dark Mode support with gorgeous Glassmorphism UI, smooth transitions, and saved preferences.
+* 🖼️ **High-Res Exporting:** Export your final schedule as a high-quality `PNG` image with a single click, ready to be set as your wallpaper or shared on WhatsApp.
+* 🔖 **Advanced Bookmarking:** Save multiple potential schedules directly to your browser's LocalStorage to compare them later.
+* 👨‍🏫 **Advanced Filtering:** Filter classes based on your favorite instructors and preferred days.
+
+---
+
+## 🎮 The "Baloot Deck" Experience (Gamified UI)
+
+We turned the boring task of selecting courses into an interactive, gamified experience inspired by playing cards:
+
+- **3D Card Flips:** Click on any selected course card to watch it flip 180° in 3D, revealing advanced instructor settings.
+- **Red Alert Conflict Glow:** If two courses you select clash in timing, their cards will immediately pulse with a red warning glow.
+- **Cinematic Deck Clearing:** Clicking "Clear Deck" triggers a 3-stage animation where cards gather, shake violently, and scatter explosively across your screen!
+- **Glassmorphism Stats Bar:** Hovering over your deck reveals a beautiful frosted-glass stats bar tracking your total credits.
+
+---
+
+## 🚀 How to Use
 
 <details open>
-<summary><b>اضغط هنا لرؤية الخطوات التفصيلية</b></summary>
+<summary><b>Click here for step-by-step instructions</b></summary>
 
-1. ادخل على النظام الأكاديمي للجامعة (بوابة أكاديميا).
-2. اذهب إلى صفحة **"المقررات المطروحة"**.
-3. احفظ الصفحة في جهازك بصيغة `HTML Only` (عن طريق الضغط على `Ctrl + S` أو `Cmd + S`).
-4. افتح موقع **منظم الجدول**.
-5. ارفع الملف الذي قمت بحفظه في خطوة 3 داخل التطبيق.
-6. تصفح المقررات، اختر موادك (ستلاحظ نزولها لمحفظة البلوت)، ثم انقر على **"توليد الجدول"**.
-7. تفحص الخيارات التي لا تحتوي على تعارضات، احفظ الأنسب، وصدره كصورة جاهزة لتسجيلك!
+1. Log in to the University's Academic System (Edugate / Academia).
+2. Navigate to the **"Offered Courses"** (المقررات المطروحة) page.
+3. Save the page to your device as `HTML Only` (Press `Ctrl + S` or `Cmd + S`).
+4. Open the **JUSM (Jazan Uni SUC Manager)** app.
+5. Upload the HTML file you just saved.
+6. Browse courses, click to add them to your "Baloot Deck", and click **"Generate Schedule"**.
+7. Review the conflict-free options, save your favorite, and export it as an image!
 </details>
 
-> 💡 **نصيحة**: استخدم ميزة (إعدادات الدكاترة ⚙️) المتواجدة في بطاقة كل مادة لتضييق نطاق الخيارات للحصول على الجدول المثالي الذي يتم تدريسه من قبل دكاترتك المفضلين فقط.
+> 💡 **Pro Tip:** Use the (⚙️ Instructors Settings) by clicking on any card in your deck to narrow down choices and get a schedule taught exclusively by your favorite professors.
 
 ---
 
-## 🛠️ التقنيات المستخدمة وبنية التطبيق
+## 🛠️ Tech Stack & Architecture
 
-تم بناء هذا المشروع ليكون تطبيق صفحة واحدة (SPA) عالي الأداء ولا يحتاج لأي خوادم مركزية للعمل:
+This project is built as a highly performant, dependency-light Single Page Application (SPA):
 
-* **React 18**: لبناء الواجهة التفاعلية وإدارة الحالات المعقدة (State Management).
-* **Vanilla CSS3**: تصميم واجهة عصرية تعتمد على `CSS Variables`، `Flexbox/Grid`، وتأثيرات (Glassmorphism & Keyframe Animations) متطورة دون الاعتماد على مكتبات خارجية ثقيلة.
-* **HTML5 DOMParser**: لمعالجة وتحليل ملفات بوابة جامعة جازان (`Edugate HTML Parsing`).
-* **html2canvas**: أداة خفيفة لتحويل جداول HTML إلى صور عالية الجودة بضغطة زر.
-* **Canvas Confetti**: لإضافة لمسة من الاحتفال والبهجة عند اكتمال بناء الجداول بشكل ناجح.
-
----
-
-## 🔒 الخصوصية والأمان
-
-**بياناتك آمنة 100% ولا تخرج من جهازك أبداً.**
-التطبيق يعمل بمنهجية (Offline-First) والـ (Client-Side Rendering). تتم معالجة ملفات `HTML` المرفوعة وحساب التعارضات والجداول داخل متصفحك (Browser) حصراً، **ولا يوجد أي خوادم (Servers)** يتم إرسال بياناتك أو جداولك إليها.
+* **React 18**: For robust UI state management and complex interactions.
+* **Vanilla CSS3**: We skipped heavy libraries (like Tailwind or Bootstrap) in favor of pure, highly optimized CSS featuring CSS Variables, Grid/Flexbox, 3D Transforms, and custom Keyframe animations.
+* **HTML5 DOMParser**: Used for client-side parsing of Jazan University's Edugate HTML files.
+* **html2canvas**: A lightweight utility to convert HTML DOM elements into exportable images.
+* **Canvas Confetti**: For a touch of celebration when you successfully lock in your schedule.
 
 ---
 
-## 🤝 المساهمة والتطوير
+## 🔒 Privacy & Security
 
-إذا كان لديك أي أفكار لتحسين منظم الجداول أو واجهت أي مشاكل (Bugs)، لا تتردد في فتح `Issue` أو تقديم `Pull Request`. جميع المساهمات مرحب بها لجعل تجربة تسجيل المواد أقل توتراً وأكثر متعة لطلاب وطالبات الجامعة!
+**Your data is 100% secure and never leaves your device.**
+The application operates on an **Offline-First** and **Client-Side Rendering** architecture. All HTML file processing, conflict calculations, and schedule generation happen entirely within your local browser. **There are no backend servers**, meaning your academic data is completely private.
+
+---
+
+## 🤝 Contributing
+
+Have ideas to make schedule planning even less stressful? Encountered a bug? Feel free to open an `Issue` or submit a `Pull Request`. All contributions are welcome!
 
 <br/>
 <div align="center">
-  <p>صُنع بكل 💙 لخدمة طلاب وطالبات جامعة جازان.</p>
+  <p>Made with 💙 for the students of Jazan University.</p>
 </div>
