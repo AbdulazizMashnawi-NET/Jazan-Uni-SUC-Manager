@@ -1,0 +1,9 @@
+# Temp & Log files
+*.tmp
+*.log
+.DS_Store
+
+# IDE & OS
+.vscode/
+.idea/
+Thumbs.db

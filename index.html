@@ -1,0 +1,2080 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منظم جدول جامعة جازان</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗓️</text></svg>">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap');
+        
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --header-bg: #1e293b;
+            --header-text: #ffffff;
+            --hover-bg: #f8fafc;
+            --danger-bg: #fef2f2;
+            --danger-border: #fca5a5;
+            --danger-text: #ef4444;
+            --success-bg: #ecfdf5;
+            --success-border: #6ee7b7;
+            --success-text: #10b981;
+            --warning-bg: #fef3c7;
+            --warning-text: #b45309;
+            --modal-overlay: rgba(15, 23, 42, 0.6);
+            --shadow: 0 4px 10px rgba(0,0,0,0.05);
+            --shadow-hover: 0 12px 20px -5px rgba(0,0,0,0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #090d16;
+            --card-bg: #0f172a;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.12);
+            --header-bg: #0b1120;
+            --header-text: #f8fafc;
+            --hover-bg: rgba(30, 41, 59, 0.7);
+            --danger-bg: rgba(239, 68, 68, 0.12);
+            --danger-border: rgba(239, 68, 68, 0.3);
+            --danger-text: #fca5a5;
+            --success-bg: rgba(16, 185, 129, 0.12);
+            --success-border: rgba(16, 185, 129, 0.3);
+            --success-text: #6ee7b7;
+            --warning-bg: rgba(245, 158, 11, 0.12);
+            --warning-text: #fcd34d;
+            --modal-overlay: rgba(0, 0, 0, 0.85);
+            --shadow: 0 8px 32px rgba(0,0,0,0.37);
+            --shadow-hover: 0 16px 40px rgba(0,0,0,0.5);
+        }
+
+        html, body {
+            overflow-x: hidden;
+        }
+        body { 
+            margin: 0; padding: 0; font-family: 'IBM Plex Sans Arabic', sans-serif; 
+            background-color: var(--bg-color); color: var(--text-main);
+            min-height: 100vh; display: flex; flex-direction: column;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+        * { box-sizing: border-box; }
+        button, input, textarea, select { font-family: inherit; }
+        
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.88) translateY(12px); }
+            60% { transform: scale(1.02) translateY(-2px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(22px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes floatLogo {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(3deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+            70% { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        .fade-in-up { animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .stagger-item { opacity: 0; animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border-color); transition: .4s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; right: 3px; bottom: 3px; background-color: white; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-radius: 50%; }
+        input:checked + .slider { background-color: #3b82f6; }
+        input:checked + .slider:before { transform: translateX(-19px); }
+        input.summer-toggle:checked + .slider { background-color: #f59e0b; }
+        input.time-toggle:checked + .slider { background-color: #3b82f6; }
+
+        .copy-toast {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px);
+            background: #10b981; color: white; padding: 10px 25px; border-radius: 30px;
+            font-weight: bold; font-size: 14px; box-shadow: var(--shadow);
+            opacity: 0; pointer-events: none; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); z-index: 1000;
+        }
+        .copy-toast.show { opacity: 1; transform: translateX(-50%) translateY(-10px); }
+        
+        #root { flex-grow: 1; position: relative; padding-bottom: 160px; }
+        
+        .footer {
+            text-align: center; padding: 20px; color: var(--text-muted); font-size: 13px; font-weight: 600;
+            margin-top: auto; border-top: 1px solid var(--border-color); background: var(--card-bg);
+            display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.3s;
+        }
+        .footer span { color: #3b82f6; }
+        .help-list { text-align: right; margin: 0; padding-right: 20px; color: var(--text-muted); font-size: 15px; line-height: 1.8; }
+        .help-list li { margin-bottom: 8px; }
+        .help-list b { color: var(--text-main); }
+
+        .btn-animate { transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .btn-animate:active:not(:disabled) { transform: scale(0.92); }
+        .btn-animate:hover:not(:disabled) { transform: translateY(-3px) scale(1.02); box-shadow: var(--shadow-hover); }
+        .btn-pulse { animation: pulseGlow 2s infinite; }
+
+        .time-col { display: flex; flex-direction: column; width: 80px; border-left: 2px solid var(--border-color); background: var(--hover-bg); flex-shrink: 0; }
+        .day-col { display: flex; flex-direction: column; flex: 1; position: relative; border-left: 1px solid var(--border-color); min-width: 0; transition: z-index 0s; }
+        .day-col:hover { z-index: 50; }
+        .day-col:last-child { border-left: none; }
+        .grid-header { height: 48px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--text-main); border-bottom: 2px solid var(--border-color); background: var(--hover-bg); font-size: 13px; padding: 0 4px; box-sizing: border-box; line-height: 1.2; user-select: none; }
+        .grid-cell { border-bottom: 1px solid var(--border-color); }
+        .time-cell { display: flex; align-items: center; justify-content: center; color: var(--text-main); font-size: 11px; font-weight: 700; border-bottom: 1px solid var(--border-color); }
+        .time-cell-badge { background: var(--card-bg); border: 1px solid var(--border-color); padding: 3px 8px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); color: var(--text-main); white-space: nowrap; }
+
+        .theme-toggle-btn {
+            position: fixed; bottom: 30px; right: 30px; z-index: 1000; width: 55px; height: 55px;
+            border-radius: 50%; border: 2px solid var(--border-color); background: var(--card-bg);
+            display: flex; justify-content: center; align-items: center; font-size: 26px;
+            cursor: pointer; box-shadow: var(--shadow); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .theme-toggle-btn:hover { transform: scale(1.15) rotate(15deg); box-shadow: var(--shadow-hover); }
+        .theme-toggle-btn:active { transform: scale(0.9) rotate(-10deg); }
+
+        /* ===== FIX: تحسين الطباعة ===== */
+        @media print {
+            @page { size: landscape; margin: 10mm; }
+            body { background: white !important; }
+            .no-print, .footer, .theme-toggle-btn { display: none !important; }
+            #root { padding: 0 !important; }
+            
+            #schedule-grid {
+                position: relative !important;
+                width: 100% !important;
+                box-shadow: none !important;
+                border: 2px solid black !important;
+                font-size: 10px !important;
+                background: white !important;
+            }
+            .grid-header { background: #f0f0f0 !important; color: black !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .time-col { background: #f8f8f8 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
+            /* لضمان طباعة الألوان في المتصفحات */
+            * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+
+        /* ===== الحاوية الخاصة بـ التمرير الأفقي للشاشات الصغيرة ===== */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        #schedule-grid { min-width: 800px; } /* لضمان عدم تداخل الخلايا في الجوال */
+        /* واجهة الاستخدام */
+        .app-shell { padding: 36px 20px; display: flex; flex-direction: column; min-height: 100vh; position: relative; z-index: 1; box-sizing: border-box; }
+        .app-container { max-width: 1200px; width: 100%; margin: 0 auto; background: var(--card-bg); border-radius: 22px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); overflow: hidden; display: flex; flex-direction: column; border: 1px solid var(--border-color); position: relative; z-index: 2; }
+        .app-header { background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 58%, #2563eb 130%); color: #fff; padding: 28px 32px 22px; text-align: center; position: relative; }
+        .brand { display: flex; align-items: center; justify-content: center; gap: 11px; }
+        .brand-mark { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.2); font-size: 21px; animation: floatLogo 3s ease-in-out infinite; }
+        .brand h1 { margin: 0; font-size: 25px; letter-spacing: -.3px; }
+        .brand-subtitle { margin: 8px 0 0; color: rgba(255,255,255,.74); font-size: 13px; }
+        .progress-steps { display: flex; justify-content: center; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
+        .progress-step { display: flex; align-items: center; gap: 7px; padding: 6px 11px; border-radius: 999px; background: rgba(255,255,255,.1); color: rgba(255,255,255,.7); font-size: 12px; font-weight: 700; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .progress-step.active { background: #fff; color: #1e40af; box-shadow: 0 4px 14px rgba(0,0,0,.16); transform: scale(1.05); }
+        .progress-number { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.18); font-size: 10px; }
+        .progress-step.active .progress-number { background: #dbeafe; }
+        .app-content { padding: 32px; flex-grow: 1; }
+        .upload-zone { text-align: center; padding: 64px 32px; border: 2px dashed #93c5fd; border-radius: 20px; background: linear-gradient(145deg, var(--hover-bg), rgba(59,130,246,.07)); transition: border-color .3s ease, transform .3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow .3s ease; }
+        .upload-zone:hover { border-color: #3b82f6; transform: translateY(-4px) scale(1.01); box-shadow: 0 16px 32px rgba(30,64,175,.12); }
+        
+        .premium-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: #fff; animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .premium-spinner {
+            width: 80px; height: 80px; border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.05);
+            border-top-color: #3b82f6; border-right-color: #8b5cf6;
+            animation: spinPremium 1s linear infinite, glowPremium 2s ease-in-out infinite alternate;
+        }
+        .premium-text {
+            margin-top: 28px; font-size: 26px; font-weight: 800;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6);
+            -webkit-background-clip: text; color: transparent;
+            animation: pulseGlow 2s infinite; text-align: center;
+        }
+        .premium-subtext {
+            margin-top: 14px; color: #94a3b8; font-size: 15px; text-align: center; font-weight: 500;
+            animation: fadeIn 1s ease-in;
+        }
+        .page-enter { animation: slideUpFade 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        @keyframes spinPremium { to { transform: rotate(360deg); } }
+        @keyframes glowPremium {
+            from { box-shadow: 0 0 15px rgba(59, 130, 246, 0.4), inset 0 0 15px rgba(139, 92, 246, 0.4); }
+            to { box-shadow: 0 0 35px rgba(59, 130, 246, 0.9), inset 0 0 35px rgba(139, 92, 246, 0.9); }
+        }
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* تأثير اخترني (Pick Me Motion) */
+        @keyframes pickMePulse {
+            0% { transform: translateY(-8px) scale(1.02) rotate(-1deg); }
+            50% { transform: translateY(-12px) scale(1.04) rotate(1deg); box-shadow: 0 16px 32px rgba(59, 130, 246, 0.4) !important; }
+            100% { transform: translateY(-8px) scale(1.02) rotate(-1deg); }
+        }
+        .pick-me-hover {
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        }
+        .pick-me-hover:hover {
+            transform: translateY(-8px) scale(1.02) rotate(-1deg) !important;
+            box-shadow: 0 12px 24px rgba(59, 130, 246, 0.3) !important;
+            border-color: #60a5fa !important;
+            z-index: 50;
+            animation: pickMePulse 2s ease-in-out 0.4s infinite alternate !important;
+        }
+
+        /* محفظة البلوت السفلية (Baloot Deck) */
+        .baloot-deck-container {
+            position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
+            width: 100vw; height: 150px; pointer-events: none; z-index: 1000;
+            display: flex; justify-content: center; align-items: flex-end;
+            transition: bottom 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: transparent;
+        }
+        .baloot-deck-container.has-cards { bottom: -20px; pointer-events: auto; }
+        .baloot-deck-container.hovered { height: 75vh; bottom: 0; }
+        
+        .baloot-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+        }
+        .baloot-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .baloot-deck-container.deck-shake { animation: deckShake 0.15s infinite; }
+        @keyframes deckShake {
+            0% { transform: translateX(-50%) translate(2px, 1px) rotate(0deg); }
+            20% { transform: translateX(-50%) translate(-3px, 0px) rotate(1deg); }
+            40% { transform: translateX(-50%) translate(1px, -1px) rotate(1deg); }
+            60% { transform: translateX(-50%) translate(-3px, 1px) rotate(0deg); }
+            80% { transform: translateX(-50%) translate(-1px, -1px) rotate(1deg); }
+            100% { transform: translateX(-50%) translate(1px, -2px) rotate(-1deg); }
+        }
+
+        @keyframes conflictPulse {
+            0% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.6), inset 0 0 15px rgba(239, 68, 68, 0.4); border-color: rgba(239, 68, 68, 0.8); }
+            50% { box-shadow: 0 0 25px rgba(239, 68, 68, 1), inset 0 0 30px rgba(239, 68, 68, 0.8); border-color: rgba(239, 68, 68, 1); }
+            100% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.6), inset 0 0 15px rgba(239, 68, 68, 0.4); border-color: rgba(239, 68, 68, 0.8); }
+        }
+
+        .baloot-card {
+            position: absolute; bottom: 0; width: 140px; height: 180px;
+            cursor: pointer;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
+            transform-origin: center center; z-index: 1000;
+            perspective: 1200px;
+        }
+        .baloot-card:hover { z-index: 1001 !important; }
+        
+        .card-inner {
+            position: relative; width: 100%; height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .card-front, .card-back {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            border-radius: 16px; padding: 10px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.3), inset 0 2px 5px rgba(255,255,255,0.1);
+            border: 2px solid #3b82f6; text-align: center; color: var(--text-main);
+        }
+        .card-front.conflict-glow, .card-back.conflict-glow {
+            animation: conflictPulse 1.5s infinite !important;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            background: rgba(15, 23, 42, 0.95) !important;
+            border-color: rgba(255,255,255,0.3) !important;
+            gap: 8px; justify-content: center;
+        }
+        
+        @media (max-width: 640px) {
+            .baloot-card { width: 105px; height: 140px; }
+            .card-front, .card-back { padding: 6px; border-radius: 12px; }
+            .baloot-card .card-title { font-size: 13px !important; }
+            .baloot-card .card-name { font-size: 10px !important; -webkit-line-clamp: 2 !important; }
+            .baloot-card .card-delete { font-size: 10px !important; padding: 2px 4px !important; }
+        }
+
+        .search-input:focus { border-color: #3b82f6 !important; box-shadow: 0 0 0 4px rgba(59,130,246,.13); }
+        .course-card.filter-highlight {
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.28), 0 10px 24px rgba(59, 130, 246, 0.18);
+            transform: translateY(-4px) scale(1.01);
+        }
+        .course-card.filter-dim {
+            opacity: 0.38;
+            filter: grayscale(0.25);
+            transform: scale(0.98);
+        }
+        .course-card.filter-dim.filter-fading {
+            opacity: 0;
+            transform: scale(0.94);
+            pointer-events: none;
+        }
+        .course-card:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(15,23,42,.09); }
+        .course-card.filter-highlight:hover { transform: translateY(-4px); }
+        .course-card.filter-dim:hover { transform: scale(0.98); box-shadow: none; }
+        .course-card:focus-visible, button:focus-visible, label:focus-visible, input:focus-visible { outline: 3px solid #60a5fa; outline-offset: 3px; }
+        @media (max-width: 640px) {
+            .app-shell { padding: 0; }
+            .app-container { border-radius: 0; border-right: 0; border-left: 0; min-height: 100vh; }
+            .app-header { padding: 24px 18px 18px; }
+            .brand h1 { font-size: 21px; }
+            .brand-subtitle { font-size: 12px; }
+            .progress-steps { gap: 5px; margin-top: 16px; }
+            .progress-step { padding: 5px 8px; font-size: 11px; }
+            .app-content { padding: 20px 16px; }
+            .upload-zone { padding: 46px 18px; }
+            .theme-toggle-btn { width: 46px; height: 46px; font-size: 21px; right: 16px; bottom: 16px; }
+        }
+
+        .schedule-insight { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 20px; padding: 20px 24px; border: 1px solid var(--border-color); border-radius: 18px; background: var(--hover-bg); box-shadow: var(--shadow); }
+        .schedule-insight-title { margin: 0 0 6px; color: var(--text-main); font-size: 19px; font-weight: 700; }
+        .schedule-insight-text { margin: 0; color: var(--text-muted); font-size: 14px; line-height: 1.7; }
+        .insight-metrics { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+        .insight-metric { min-width: 95px; text-align: center; padding: 10px 14px; border-radius: 14px; background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .insight-metric strong { display: block; font-size: 20px; color: #3b82f6; }
+        .insight-metric span { font-size: 11px; color: var(--text-muted); font-weight: 700; }
+        .schedule-workspace { display: grid; grid-template-columns: minmax(250px, 30%) minmax(0, 1fr); gap: 20px; align-items: start; direction: rtl; }
+        .schedule-sidebar { position: sticky; top: 20px; max-height: calc(100vh - 80px); overflow-y: auto; padding-left: 5px; padding-right: 2px; }
+        .schedule-sidebar-title { display: flex; justify-content: space-between; align-items: center; margin: 0 0 10px; color: var(--text-main); font-size: 15px; }
+        .schedule-main { min-width: 0; }
+        .schedule-grid-frame { padding: 14px; border: 1px solid var(--border-color); border-radius: 16px; background: var(--hover-bg); overflow: visible; }
+        .schedule-workspace .table-responsive { padding-bottom: 5px; border-radius: 11px; overflow-x: auto; }
+        .course-summary-card { margin-bottom: 10px; }
+        @media (max-width: 900px) {
+            .schedule-workspace { grid-template-columns: 1fr; }
+            .schedule-sidebar { position: static; max-height: none; order: 2; }
+            .schedule-main { order: 1; }
+        }
+        @media (max-width: 640px) {
+            .schedule-insight { align-items: flex-start; flex-direction: column; padding: 16px; }
+            .insight-metrics { justify-content: flex-start; width: 100%; }
+            .insight-metric { flex: 1; min-width: 80px; }
+        }
+        #antigravity-canvas {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 0; opacity: 0.9;
+        }
+        
+        .footer {
+            text-align: center; padding: 18px 20px; color: var(--text-muted); font-size: 13px; font-weight: 600;
+            margin-top: auto; border-top: 1px solid var(--border-color); background: var(--hover-bg);
+            display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.3s;
+        }
+        /* النوافذ العائمة للجدول */
+        .time-cell-item { position: relative; }
+        .glass-tooltip {
+            position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%) translateY(10px);
+            background: rgba(15, 23, 42, 0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 10px 14px; border-radius: 12px;
+            font-size: 12px; line-height: 1.6; text-align: right; width: max-content; max-width: 240px;
+            opacity: 0; visibility: hidden; transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none; z-index: 100; box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+            display: flex; flex-direction: column; gap: 4px;
+        }
+        .glass-tooltip.tooltip-down { bottom: auto; top: calc(100% + 8px); }
+        .glass-tooltip.tooltip-edge-right { left: auto; right: 0; transform: translateY(10px); }
+        .glass-tooltip.tooltip-edge-left { left: 0; right: auto; transform: translateY(10px); }
+        
+        .time-cell-item:hover .glass-tooltip { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+        .time-cell-item:hover .glass-tooltip.tooltip-edge-right { transform: translateY(0); }
+        .time-cell-item:hover .glass-tooltip.tooltip-edge-left { transform: translateY(0); }
+        .glass-tooltip strong { color: #93c5fd; font-size: 13px; }
+
+        /* ثيمات الألوان والتحليل الذكي */
+        .palette-select {
+            background: var(--hover-bg); color: var(--text-main); border: 1px solid var(--border-color);
+            padding: 6px 12px; border-radius: 8px; font-family: inherit; font-size: 13px; cursor: pointer; outline: none;
+        }
+        .smart-insights-box {
+            background: var(--hover-bg); border: 1px solid var(--border-color); border-radius: 14px;
+            padding: 16px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 12px;
+        }
+        .smart-insights-title { font-size: 14px; font-weight: bold; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+        .smart-badges { display: flex; flex-wrap: wrap; gap: 8px; }
+        .smart-badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; display: flex; align-items: center; gap: 6px; }
+        .badge-success { background: var(--success-bg); color: var(--success-text); border: 1px solid var(--success-border); }
+        .badge-warning { background: var(--warning-bg); color: var(--warning-text); border: 1px solid var(--warning-border); }
+        .badge-danger { background: var(--danger-bg); color: var(--danger-text); border: 1px solid var(--danger-border); }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <canvas id="antigravity-canvas"></canvas>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useMemo, useEffect, useCallback } = React;
+
+        const DAY_MAP = { "1": "SUN", "2": "MON", "3": "TUE", "4": "WED", "5": "THU" };
+        const DAY_LABELS = { SUN: "الأحد", MON: "الاثنين", TUE: "الثلاثاء", WED: "الأربعاء", THU: "الخميس" };
+        const DAYS = ["SUN", "MON", "TUE", "WED", "THU"];
+
+        const GRID_START = 8;
+        const GRID_END = 22;
+        const HOURS = Array.from({ length: GRID_END - GRID_START }, (_, i) => i + GRID_START);
+
+        const isSectionOpen = (status) => /مفتوح/.test(status || "");
+        const isSectionClosed = (status) => /مغلق/.test(status || "");
+
+        // ✅ FIX: تحسين مظهر الوقت (بدون صفر مزعج للساعات في صيغة 12)
+        const formatTime = (timeStr, use12h) => {
+            if (!timeStr) return "";
+            if (!use12h) return timeStr; 
+            const [h, m] = timeStr.split(':').map(Number);
+            const ampm = h >= 12 ? 'م' : 'ص';
+            let h12 = h % 12;
+            h12 = h12 ? h12 : 12; 
+            return `${h12}:${String(m).padStart(2, '0')} ${ampm}`;
+        };
+
+        function parseTimeArabic(t) {
+            if (!t) return "";
+            const isPm = /م|p/i.test(t);
+            const isAm = /ص|a/i.test(t);
+            const clean = t.replace(/[^\d:]/g, ""); 
+            let parts = clean.split(":");
+            if (parts.length < 2) return "";
+            let h = parseInt(parts[0], 10), m = parseInt(parts[1], 10);
+            if (isNaN(h) || isNaN(m)) return "";
+            if (isPm && h !== 12) h += 12;
+            else if (isAm && h === 12) h = 0;
+            else if (!isPm && !isAm && h >= 1 && h <= 6) h += 12;
+            return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+        }
+
+        function parseSectionField(raw) {
+            if (!raw) return [];
+            const slots = raw.split("@n");
+            const result = [];
+            slots.forEach(slot => {
+                if (!slot.includes("@t")) return;
+                const index = slot.indexOf("@t");
+                const daysPart = slot.slice(0, index);
+                const rest = slot.slice(index + 2);
+                if (!rest) return;
+                const days = daysPart.trim().split(/\s+/).map(n => DAY_MAP[n]).filter(Boolean);
+                const timeMatch = rest.match(/(\d{1,2}:\d{2}\s*[مصap\.m]*)\s*[-–]\s*(\d{1,2}:\d{2}\s*[مصap\.m]*)/i);
+                if (timeMatch && days.length > 0) {
+                    result.push({ days, start: parseTimeArabic(timeMatch[1]), end: parseTimeArabic(timeMatch[2]) });
+                }
+            });
+            return result;
+        }
+
+        function timeToMin(t) {
+            if (!t) return 0;
+            const [h, m] = t.split(":").map(Number);
+            return h * 60 + m;
+        }
+
+        function hasConflict(s1, s2) {
+            const sharedDay = s1.days.some(d => s2.days.includes(d));
+            if (!sharedDay) return false;
+            return timeToMin(s1.start) < timeToMin(s2.end) && timeToMin(s2.start) < timeToMin(s1.end);
+        }
+
+        function scoreSchedule(schedule) {
+            let score = 0;
+            const daysUsed = new Set();
+            let totalEndMins = 0;
+            schedule.forEach(sec => {
+                sec.slots.forEach(slot => {
+                    slot.days.forEach(d => daysUsed.add(d));
+                    totalEndMins += timeToMin(slot.end);
+                });
+            });
+            score += (5 - daysUsed.size) * 5000;
+            score -= totalEndMins; 
+            return score;
+        }
+
+        function getValidCourseConfigs(course, hideClosed, courseInstructors = {}) {
+            const types = Object.keys(course.types);
+            let configs = [[]];
+            const allowedInstructors = courseInstructors[course.id] || [];
+
+            for (const type of types) {
+                let available = course.types[type];
+                if (hideClosed) available = available.filter(s => isSectionOpen(s.status));
+                if (allowedInstructors.length > 0) available = available.filter(s => allowedInstructors.includes(s.instructor));
+
+                const newConfigs = [];
+                for (const config of configs) {
+                    for (const sec of available) {
+                        if (!config.some(prevSec => prevSec.slots.some(s1 => sec.slots.some(s2 => hasConflict(s1, s2))))) {
+                            newConfigs.push([...config, sec]);
+                        }
+                    }
+                }
+                configs = newConfigs;
+            }
+            return configs;
+        }
+
+        function courseMatchesFilters(course, textFilter, days, instructors) {
+            const allSections = Object.values(course.types).flat();
+            const query = (textFilter || "").trim();
+            const matchesText = !query
+                || course.name.includes(query)
+                || course.id.toLowerCase().includes(query.toLowerCase());
+            const matchesDay = days.length === 0
+                || allSections.some(section => section.slots.some(slot => days.some(day => slot.days.includes(day))));
+            const matchesInstructor = instructors.length === 0
+                || allSections.some(section => instructors.includes(section.instructor));
+            return matchesText && matchesDay && matchesInstructor;
+        }
+
+        function isStrictConflict(c1, c2, hideClosed, courseInstructors = {}) {
+            const configs1 = getValidCourseConfigs(c1, hideClosed, courseInstructors);
+            const configs2 = getValidCourseConfigs(c2, hideClosed, courseInstructors);
+            if (configs1.length === 0 || configs2.length === 0) return true;
+            for (const cfg1 of configs1) {
+                for (const cfg2 of configs2) {
+                    let overlap = false;
+                    for (const s1 of cfg1) {
+                        for (const s2 of cfg2) {
+                            if (s1.slots.some(sl1 => s2.slots.some(sl2 => hasConflict(sl1, sl2)))) overlap = true;
+                        }
+                    }
+                    if (!overlap) return false;
+                }
+            }
+            return true;
+        }
+
+        const PALETTES = {
+            default: [
+                { bg: "#3b82f6", light: "rgba(59, 130, 246, 0.12)", border: "#93c5fd", darkText: "#93c5fd" },
+                { bg: "#10b981", light: "rgba(16, 185, 129, 0.12)", border: "#6ee7b7", darkText: "#6ee7b7" },
+                { bg: "#f59e0b", light: "rgba(245, 158, 11, 0.12)", border: "#fcd34d", darkText: "#fcd34d" },
+                { bg: "#8b5cf6", light: "rgba(139, 92, 246, 0.12)", border: "#c4b5fd", darkText: "#c4b5fd" },
+                { bg: "#ef4444", light: "rgba(239, 68, 68, 0.12)", border: "#fca5a5", darkText: "#fca5a5" },
+                { bg: "#06b6d4", light: "rgba(6, 182, 212, 0.12)", border: "#67e8f9", darkText: "#67e8f9" },
+            ],
+            pastel: [
+                { bg: "#fca5a5", light: "rgba(252, 165, 165, 0.12)", border: "#fecaca", darkText: "#fecaca" },
+                { bg: "#86efac", light: "rgba(134, 239, 172, 0.12)", border: "#bbf7d0", darkText: "#bbf7d0" },
+                { bg: "#93c5fd", light: "rgba(147, 197, 253, 0.12)", border: "#bfdbfe", darkText: "#bfdbfe" },
+                { bg: "#c4b5fd", light: "rgba(196, 181, 253, 0.12)", border: "#ddd6fe", darkText: "#ddd6fe" },
+                { bg: "#fde047", light: "rgba(253, 224, 71, 0.12)", border: "#fef08a", darkText: "#fef08a" },
+                { bg: "#f9a8d4", light: "rgba(249, 168, 212, 0.12)", border: "#fbcfe8", darkText: "#fbcfe8" },
+            ],
+            neon: [
+                { bg: "#ff007f", light: "rgba(255, 0, 127, 0.12)", border: "#ff4da6", darkText: "#ff4da6" },
+                { bg: "#00f0ff", light: "rgba(0, 240, 255, 0.12)", border: "#4dffff", darkText: "#4dffff" },
+                { bg: "#bfff00", light: "rgba(191, 255, 0, 0.12)", border: "#d9ff4d", darkText: "#d9ff4d" },
+                { bg: "#ff00ff", light: "rgba(255, 0, 255, 0.12)", border: "#ff4dff", darkText: "#ff4dff" },
+                { bg: "#ffaa00", light: "rgba(255, 170, 0, 0.12)", border: "#ffcc4d", darkText: "#ffcc4d" },
+                { bg: "#00ff7f", light: "rgba(0, 255, 127, 0.12)", border: "#4dff99", darkText: "#4dff99" },
+            ]
+        };
+        const COLORS = PALETTES['default'];
+
+        function TimeGrid({ sections, courseColors, use12h, darkMode }) {
+            const CELL_HEIGHT = 50;
+            const TOTAL_HOURS = GRID_END - GRID_START;
+            const GRID_HEIGHT = TOTAL_HOURS * CELL_HEIGHT;
+            const HEADER_HEIGHT = 48;
+
+            return (
+                <div className="table-responsive">
+                    <div id="schedule-grid" style={{ background: "var(--card-bg)", borderRadius: "12px", border: "1px solid var(--border-color)", overflow: "hidden", display: "flex", direction: "rtl", boxShadow: "var(--shadow)" }}>
+                        <div className="time-col">
+                            <div className="grid-header" style={{ height: `${HEADER_HEIGHT}px`, fontSize: "11px", color: "var(--text-muted)", fontWeight: "bold" }}>⏰ الوقت</div>
+                            <div style={{ height: `${GRID_HEIGHT}px`, display: "flex", flexDirection: "column" }}>
+                                {HOURS.map(h => (
+                                    <div key={h} className="time-cell" style={{ height: `${CELL_HEIGHT}px` }}>
+                                        <span className="time-cell-badge">
+                                            {formatTime(`${String(h).padStart(2, '0')}:00`, use12h)}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+                            {DAYS.map((d, colIdx) => (
+                                <div key={d} className="day-col">
+                                    <div className="grid-header" style={{ height: `${HEADER_HEIGHT}px` }}>{DAY_LABELS[d]}</div>
+                                    <div style={{ height: `${GRID_HEIGHT}px`, position: "relative" }}>
+                                        {HOURS.map(h => (
+                                            <div key={h} className="grid-cell" style={{ height: `${CELL_HEIGHT}px` }} />
+                                        ))}
+
+                                        {sections.map(sec => {
+                                            const colorObj = courseColors[sec.courseId] || COLORS[0];
+                                            const isOpen = isSectionOpen(sec.status);
+
+                                            return sec.slots.flatMap((slot, slotIdx) => {
+                                                if (!slot.days.includes(d) || !slot.start || !slot.end) return null;
+
+                                                const startMin = timeToMin(slot.start) - GRID_START * 60;
+                                                const durMin = timeToMin(slot.end) - timeToMin(slot.start);
+                                                if (startMin < 0 || durMin <= 0) return null;
+
+                                                const topPx = (startMin / 60) * CELL_HEIGHT + 2;
+                                                const heightPx = Math.max(30, (durMin / 60) * CELL_HEIGHT - 4);
+
+                                                let tooltipClass = "glass-tooltip";
+                                                if (startMin < 180) tooltipClass += " tooltip-down"; // قبل 11 صباحاً تفتح للأسفل
+                                                if (colIdx === 0) tooltipClass += " tooltip-edge-right"; // العمود الأيمن
+                                                if (colIdx === DAYS.length - 1) tooltipClass += " tooltip-edge-left"; // العمود الأيسر
+
+                                                return (
+                                                    <div key={`${sec.id}-${d}-${slotIdx}`} className="time-cell-item" style={{
+                                                        position: "absolute", top: `${topPx}px`, left: "3px", right: "3px",
+                                                        height: `${heightPx}px`, background: colorObj.light,
+                                                        border: `1.5px solid ${colorObj.border}`,
+                                                        borderRight: `4px solid ${colorObj.bg}`, borderRadius: "8px",
+                                                        padding: "5px", overflow: "visible",
+                                                        boxShadow: "0 2px 6px rgba(0,0,0,0.08)", opacity: isOpen ? 1 : 0.65,
+                                                        display: "flex", flexDirection: "column", justifyContent: "space-between",
+                                                        animation: `popIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) ${colIdx*0.06}s both`, zIndex: 10,
+                                                        transition: "all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)"
+                                                    }}
+                                                    onMouseEnter={e => {
+                                                        e.currentTarget.style.transform = "scale(1.05) translateY(-2px)";
+                                                        e.currentTarget.style.zIndex = "999";
+                                                        e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.18)";
+                                                    }}
+                                                    onMouseLeave={e => {
+                                                        e.currentTarget.style.transform = "scale(1) translateY(0)";
+                                                        e.currentTarget.style.zIndex = "10";
+                                                        e.currentTarget.style.boxShadow = "0 2px 6px rgba(0,0,0,0.08)";
+                                                    }}>
+                                                        <div>
+                                                            <div style={{ fontWeight: "bold", color: darkMode ? colorObj.darkText : colorObj.bg, fontSize: "10px", lineHeight: "1.3" }}>
+                                                                {sec.courseName} <span style={{opacity: 0.8}}>({sec.type})</span>
+                                                            </div>
+                                                            <div style={{ color: "var(--text-main)", marginTop: "2px", fontSize: "9px", opacity: 0.85 }}>
+                                                                {formatTime(slot.start, use12h)} - {formatTime(slot.end, use12h)}
+                                                            </div>
+                                                        </div>
+                                                        {heightPx >= 60 && (
+                                                            <div style={{ color: "var(--text-main)", fontWeight: "bold", fontSize: "9px", borderTop: `1px dashed ${colorObj.border}`, paddingTop: "3px", marginTop: "3px", opacity: 0.9 }}>
+                                                                👨‍🏫 {sec.instructor} | {sec.id}
+                                                            </div>
+                                                        )}
+                                                        <div className={`${tooltipClass} no-print`}>
+                                                            <strong>{sec.courseName}</strong>
+                                                            <div style={{marginTop: '4px'}}>{sec.courseId} - شعبة {sec.id}</div>
+                                                            <div>👨‍🏫 {sec.instructor || "غير محدد"}</div>
+                                                            <div>🏢 {slot.room || "غير محدد"}</div>
+                                                            <div>⏰ {formatTime(slot.start, use12h)} - {formatTime(slot.end, use12h)}</div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            });
+                                        })}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function CustomModal({ isOpen, title, message, children, isError, onClose }) {
+            if (!isOpen) return null;
+            return (
+                <div style={{
+                    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                    backgroundColor: 'var(--modal-overlay)', backdropFilter: 'blur(5px)',
+                    zIndex: 9999, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px',
+                    animation: 'fadeInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+                }}>
+                    <div style={{
+                        background: 'var(--card-bg)', padding: '30px', borderRadius: '20px',
+                        maxWidth: '500px', width: '100%', textAlign: 'center',
+                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.3)',
+                        animation: 'popIn 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
+                    }}>
+                        <div style={{ fontSize: '48px', marginBottom: '15px' }}>
+                            {isError ? '⚠️' : (title.includes('استخراج') ? 'ℹ️' : '✨')}
+                        </div>
+                        <h2 style={{ margin: '0 0 10px 0', color: 'var(--text-main)', fontSize: '22px' }}>{title}</h2>
+                        {message && <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '15px', marginBottom: '20px', whiteSpace: 'pre-wrap' }}>{message}</p>}
+                        {children && <div style={{ marginBottom: '25px', textAlign: 'right' }}>{children}</div>}
+                        <button className="btn-animate" onClick={onClose} style={{
+                            background: isError ? '#ef4444' : '#3b82f6', color: 'white', border: 'none',
+                            padding: '12px 30px', borderRadius: '10px', cursor: 'pointer',
+                            fontWeight: 'bold', fontSize: '15px', width: '100%'
+                        }}>حسناً، فهمت</button>
+                    </div>
+                </div>
+            );
+        }
+
+        function App() {
+            const [courses, setCourses] = useState([]);
+            const [selectedIds, setSelectedIds] = useState([]);
+            const [schedules, setSchedules] = useState([]);
+            const [currentIdx, setCurrentIdx] = useState(0);
+            const [view, setView] = useState("upload");
+            const [hideClosed, setHideClosed] = useState(false);
+            const [isSummerTerm, setIsSummerTerm] = useState(false);
+            const [use12hFormat, setUse12hFormat] = useState(true);
+            const [colorPalette, setColorPalette] = useState("default");
+            const [toastText, setToastText] = useState("");
+            const [darkMode, setDarkMode] = useState(() => {
+                try { return localStorage.getItem('darkMode') === 'true'; } catch { return false; }
+            });
+            const [instructorFilter, setInstructorFilter] = useState("");
+            const [selectedDays, setSelectedDays] = useState([]);
+            const [selectedInstructors, setSelectedInstructors] = useState([]);
+            const [savedSchedules, setSavedSchedules] = useState(() => {
+                try { return JSON.parse(localStorage.getItem('savedSchedules') || '[]'); } catch { return []; }
+            });
+            const [conflictErrors, setConflictErrors] = useState({ type: null, data: [] });
+            const [realTimeConflicts, setRealTimeConflicts] = useState({});
+            const [modal, setModal] = useState({ isOpen: false, title: "", message: "", isError: false });
+            const [helpModalOpen, setHelpModalOpen] = useState(false);
+            const [savedPanelOpen, setSavedPanelOpen] = useState(false);
+            const [filterPhase, setFilterPhase] = useState("none");
+            const [isExtracting, setIsExtracting] = useState(false);
+            const [loadingPhase, setLoadingPhase] = useState(0);
+            
+            // New States for Custom Instructor Selection & Baloot Deck UI
+            const [courseInstructors, setCourseInstructors] = useState({});
+            const [settingsModalCourse, setSettingsModalCourse] = useState(null);
+            const [deckHovered, setDeckHovered] = useState(false);
+            const [isThrowing, setIsThrowing] = useState(false);
+            const [isClearing, setIsClearing] = useState(false);
+            const [flippedCards, setFlippedCards] = useState(new Set());
+            const [draggedIdx, setDraggedIdx] = useState(null);
+
+            const hasActiveFilters = Boolean(
+                instructorFilter.trim() || selectedDays.length || selectedInstructors.length
+            );
+
+            useEffect(() => {
+                if (!hasActiveFilters) {
+                    setFilterPhase("none");
+                    return;
+                }
+                setFilterPhase("highlight");
+                const highlightTimer = setTimeout(() => setFilterPhase("fade"), 900);
+                return () => clearTimeout(highlightTimer);
+            }, [instructorFilter, selectedDays, selectedInstructors, hasActiveFilters]);
+
+            useEffect(() => {
+                if (filterPhase !== "fade") return;
+                const hideTimer = setTimeout(() => setFilterPhase("done"), 450);
+                return () => clearTimeout(hideTimer);
+            }, [filterPhase]);
+
+            const clearFilters = () => {
+                setSelectedDays([]);
+                setSelectedInstructors([]);
+                setInstructorFilter("");
+                setFilterPhase("none");
+            };
+
+            useEffect(() => {
+                document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
+                try { localStorage.setItem('darkMode', darkMode); } catch {}
+            }, [darkMode]);
+
+            useEffect(() => {
+                try { localStorage.setItem('savedSchedules', JSON.stringify(savedSchedules)); } catch {}
+            }, [savedSchedules]);
+
+            const showModal = (title, message, isError = true) => setModal({ isOpen: true, title, message, isError });
+            const closeModal = () => setModal({ ...modal, isOpen: false });
+
+            const totalCredits = selectedIds.reduce((sum, id) => {
+                const course = courses.find(c => c.id === id);
+                return sum + (course ? course.credits : 0);
+            }, 0);
+
+            const instructors = useMemo(() => [...new Set(
+                courses.flatMap(course => Object.values(course.types).flat().map(section => section.instructor))
+                    .filter(name => name && name !== "غير محدد")
+            )].sort((a, b) => a.localeCompare(b, 'ar')), [courses]);
+
+            const getWeeklyHours = (schedule) => {
+                let total = 0;
+                schedule.forEach(sec => {
+                    sec.slots.forEach(slot => {
+                        if (slot.start && slot.end) {
+                            const dur = (timeToMin(slot.end) - timeToMin(slot.start)) / 60;
+                            total += dur * slot.days.length;
+                        }
+                    });
+                });
+                return total.toFixed(1);
+            };
+
+            // ✅ FIX: تحسين الأداء (Debounce) لعدم تعليق الشاشة عند اختيار المواد
+            useEffect(() => {
+                if (view !== "select") return;
+                
+                const timerId = setTimeout(() => {
+                    const selected = courses.filter(c => selectedIds.includes(c.id));
+                    const newConflicts = {};
+                    for (let i = 0; i < selected.length; i++) {
+                        for (let j = i + 1; j < selected.length; j++) {
+                            if (isStrictConflict(selected[i], selected[j], hideClosed, courseInstructors)) {
+                                if (!newConflicts[selected[i].id]) newConflicts[selected[i].id] = [];
+                                if (!newConflicts[selected[j].id]) newConflicts[selected[j].id] = [];
+                                newConflicts[selected[i].id].push(selected[j].name);
+                                newConflicts[selected[j].id].push(selected[i].name);
+                            }
+                        }
+                    }
+                    setRealTimeConflicts(newConflicts);
+                }, 300); // تأخير 300 مللي ثانية
+                
+                return () => clearTimeout(timerId);
+            }, [selectedIds, hideClosed, courses, view]);
+
+            const showToast = (text) => {
+                setToastText(text);
+                setTimeout(() => setToastText(""), 3000);
+            };
+
+            const copyToClipboard = (text) => {
+                navigator.clipboard.writeText(text).then(() => showToast(text));
+            };
+
+            const handleFileUpload = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                setIsExtracting(true);
+                setLoadingPhase(0);
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    setTimeout(() => {
+                        setLoadingPhase(1); // تحليل الأوقات والشعب
+                        setTimeout(() => {
+                            try {
+                                const html = event.target.result;
+                                const parser = new DOMParser();
+                                const doc = parser.parseFromString(html, "text/html");
+                                const table = doc.getElementById("myForm:offeredCoursesTable");
+                                
+                                if (!table) {
+                                    setIsExtracting(false);
+                                    showModal("ملف غير صالح", "لم يتم العثور على جدول المقررات. تأكد من أنك قمت بحفظ صفحة المقررات المطروحة بشكل صحيح.");
+                                    return;
+                                }
+
+                                const rows = table.querySelectorAll("tbody tr");
+                                const extracted = {};
+
+                                rows.forEach(row => {
+                                    const cells = row.querySelectorAll("td");
+                                    if (cells.length < 6) return;
+                                    let texts = Array.from(cells).map(c => c.textContent.trim().replace(/\s+/g, ' '));
+                                    texts = texts.filter(t => t && t !== "التفاصيل" && t !== "null");
+
+                                    let code = "", name = "", secId = "", type = "نظري", credits = 0, status = "غير محدد";
+
+                                    const statusItem = texts.find(t => t.includes("مغلق") || t.includes("مفتوح"));
+                                    if (statusItem) { status = statusItem; texts = texts.filter(t => t !== statusItem); }
+
+                                    const typeItem = texts.find(t => ["نظري", "عملي", "سريري", "تدريب", "ميداني", "محاضرة"].some(k => t.includes(k)));
+                                    if (typeItem) { type = typeItem; texts = texts.filter(t => t !== typeItem); }
+
+                                    const secItem = texts.find(t => /^\d{4,6}$/.test(t));
+                                    if (secItem) { secId = secItem; texts = texts.filter(t => t !== secItem); }
+
+                                    const creditItem = texts.find(t => /^\d{1,2}$/.test(t));
+                                    if (creditItem) { credits = parseInt(creditItem); texts = texts.filter(t => t !== creditItem); }
+
+                                    const codeItem = texts.find(t => (t.includes("-") && /\d/.test(t)) || (/\d/.test(t) && /[a-zA-Zأ-ي]/.test(t) && t.length <= 15 && !t.includes(" ")));
+                                    if (codeItem) { code = codeItem; texts = texts.filter(t => t !== codeItem); }
+
+                                    if (texts.length > 0) {
+                                        name = texts.reduce((a, b) => a.length > b.length ? a : b, "");
+                                    }
+                                    if (!code) code = name.split(" ")[0] || ("مجهول-" + secId);
+                                    if (!name) name = code;
+                                    if (!secId) secId = "00000";
+
+                                    let instructor = "";
+                                    const instInput = row.querySelector('input[id*="instructor"]');
+                                    if (instInput && instInput.value.trim()) instructor = instInput.value.trim();
+                                    else if (cells.length >= 7) instructor = cells[6].textContent.trim();
+                                    if (!instructor || instructor === "null" || instructor === "التفاصيل" || instructor === "") instructor = "غير محدد";
+
+                                    const sectionRaw = row.querySelector('input[id$=":section"]')?.value || "";
+                                    const slots = parseSectionField(sectionRaw);
+
+                                    if (!extracted[code]) extracted[code] = { id: code, name, credits: 0, types: {} };
+                                    if (credits > extracted[code].credits) extracted[code].credits = credits;
+                                    if (!extracted[code].types[type]) extracted[code].types[type] = [];
+                                    extracted[code].types[type].push({ id: secId, courseId: code, courseName: name, type, status, instructor, slots });
+                                });
+
+                                setCourses(Object.values(extracted));
+                                setIsExtracting(false);
+                                setView("select");
+                            } catch (err) {
+                                setIsExtracting(false);
+                                showModal("خطأ في القراءة", "حدث خطأ غير متوقع أثناء قراءة الملف. يرجى التأكد من اختيار الملف الصحيح.");
+                            }
+                        }, 800);
+                    }, 800);
+                };
+                reader.readAsText(file);
+            };
+
+            const toggleSelection = (course) => {
+                const isCoop = course.name.includes("التدريب التعاوني");
+
+                if (selectedIds.includes(course.id)) {
+                    setSelectedIds(prev => prev.filter(x => x !== course.id));
+                } else {
+                    if (isSummerTerm && selectedIds.length >= 3) return showModal("الحد الأقصى", "في الترم الصيفي لا يمكنك تجاوز 3 مواد.");
+                    if (!isSummerTerm && !isCoop && totalCredits + course.credits > 20) return showModal("تجاوز الساعات", `الحد الأقصى 20 ساعة. المجموع سيصبح ${totalCredits + course.credits}.`);
+                    setSelectedIds(prev => [...prev, course.id]);
+                }
+            };
+
+            const courseColors = useMemo(() => {
+                const map = {};
+                const currentPalette = PALETTES[colorPalette] || PALETTES['default'];
+                courses.forEach((c, i) => { map[c.id] = currentPalette[i % currentPalette.length]; });
+                return map;
+            }, [courses, colorPalette]);
+
+            const generate = () => {
+                const selected = courses.filter(c => selectedIds.includes(c.id));
+                setConflictErrors({ type: null, data: [] });
+
+                const hasCoop = selected.some(c => c.name.includes("التدريب التعاوني"));
+                if (hasCoop && selected.length === 1) return setView("coop_result");
+
+                const nonCoopCredits = selected.filter(c => !c.name.includes("التدريب التعاوني")).reduce((s, c) => s + c.credits, 0);
+                
+                if (!isSummerTerm && !hasCoop && nonCoopCredits < 12) {
+                    alert("تنبيه: مجموع ساعاتك أقل من 12 ساعة (الحد الأدنى للترم العادي). سيتم إنشاء الجدول على أي حال.");
+                }
+
+                setIsThrowing(true);
+
+                setTimeout(() => {
+                    setIsThrowing(false);
+                    setIsExtracting(true);
+                    setLoadingPhase(2);
+
+                    setTimeout(() => {
+                    setLoadingPhase(3);
+
+                    setTimeout(() => {
+                        const requirements = [];
+                        selected.forEach(course => {
+                            Object.keys(course.types).forEach(type => requirements.push({ courseId: course.id, type, sections: course.types[type] }));
+                        });
+
+                        const results = [];
+                        const HARD_LIMIT = 500; 
+
+                        function backtrack(idx, chosen) {
+                            if (results.length >= HARD_LIMIT) return;
+                            if (idx === requirements.length) { results.push([...chosen]); return; }
+
+                            let availableSections = hideClosed
+                                ? requirements[idx].sections.filter(s => isSectionOpen(s.status))
+                                : requirements[idx].sections;
+
+                            const allowedInst = courseInstructors[requirements[idx].courseId] || [];
+                            if (allowedInst.length > 0) availableSections = availableSections.filter(s => allowedInst.includes(s.instructor));
+
+                            availableSections = [...availableSections].sort((a, b) => {
+                                const aMin = a.slots.length ? timeToMin(a.slots[0].start) : 999;
+                                const bMin = b.slots.length ? timeToMin(b.slots[0].start) : 999;
+                                return aMin - bMin;
+                            });
+
+                            for (const sec of availableSections) {
+                                if (!chosen.some(prevSec => prevSec.slots.some(s1 => sec.slots.some(s2 => hasConflict(s1, s2))))) {
+                                    backtrack(idx + 1, [...chosen, sec]);
+                                }
+                            }
+                        }
+
+                        backtrack(0, []);
+
+                        if (results.length === 0) {
+                            const badPairs = [];
+                            for (let i = 0; i < selected.length; i++) {
+                                for (let j = i + 1; j < selected.length; j++) {
+                                    if (isStrictConflict(selected[i], selected[j], hideClosed, courseInstructors)) {
+                                        badPairs.push(`${selected[i].name} ⚔️ ${selected[j].name}`);
+                                    }
+                                }
+                            }
+
+                            if (badPairs.length > 0) {
+                                setConflictErrors({ type: 'pairs', data: badPairs });
+                            } else {
+                                const culprits = [];
+                                for (let i = 0; i < selected.length; i++) {
+                                    const testSelected = selected.filter((_, idx) => idx !== i);
+                                    const testReqs = [];
+                                    testSelected.forEach(course => {
+                                        Object.keys(course.types).forEach(type => testReqs.push({ courseId: course.id, type, sections: course.types[type] }));
+                                    });
+                                    let found = false;
+                                    function testBacktrack(idx, chosen) {
+                                        if (found) return;
+                                        if (idx === testReqs.length) { found = true; return; }
+                                        let available = hideClosed ? testReqs[idx].sections.filter(s => isSectionOpen(s.status)) : testReqs[idx].sections;
+                                        const allowedInst = courseInstructors[testReqs[idx].courseId] || [];
+                                        if (allowedInst.length > 0) available = available.filter(s => allowedInst.includes(s.instructor));
+                                        for (const sec of available) {
+                                            if (!chosen.some(p => p.slots.some(s1 => sec.slots.some(s2 => hasConflict(s1, s2))))) {
+                                                testBacktrack(idx + 1, [...chosen, sec]);
+                                            }
+                                        }
+                                    }
+                                    testBacktrack(0, []);
+                                    if (found) culprits.push(selected[i].name);
+                                }
+
+                                if (culprits.length > 0) setConflictErrors({ type: 'culprits', data: culprits });
+                                else setConflictErrors({ type: 'complex', data: [] });
+                            }
+                        } else {
+                            results.sort((a, b) => scoreSchedule(b) - scoreSchedule(a));
+                            if (window.confetti) {
+                                window.confetti({
+                                    particleCount: 150,
+                                    spread: 80,
+                                    origin: { y: 0.6 },
+                                    colors: ['#3b82f6', '#8b5cf6', '#10b981', '#fcd34d']
+                                });
+                            }
+                        }
+
+                        setSchedules(results);
+                        setCurrentIdx(0);
+                        setIsExtracting(false);
+                        setView("result");
+                        }, 1000);
+                    }, 800);
+                }, 800);
+            };
+
+            const getFreeDaysCount = (schedule) => {
+                const daysUsed = new Set();
+                schedule.forEach(sec => sec.slots.forEach(slot => slot.days.forEach(d => daysUsed.add(d))));
+                return 5 - daysUsed.size;
+            };
+
+            const analyzeSchedule = (schedule) => {
+                if (!schedule || schedule.length === 0) return { daysOff: 0, longGaps: 0, heavyDays: 0 };
+                
+                const daysUsed = new Set();
+                const dayClasses = { "SUN": [], "MON": [], "TUE": [], "WED": [], "THU": [] };
+
+                schedule.forEach(sec => {
+                    sec.slots.forEach(slot => {
+                        if (slot.start && slot.end) {
+                            slot.days.forEach(d => {
+                                daysUsed.add(d);
+                                dayClasses[d].push({ start: timeToMin(slot.start), end: timeToMin(slot.end) });
+                            });
+                        }
+                    });
+                });
+
+                const daysOff = 5 - daysUsed.size;
+                let longGaps = 0;
+                let heavyDays = 0;
+
+                Object.keys(dayClasses).forEach(day => {
+                    const classes = dayClasses[day].sort((a, b) => a.start - b.start);
+                    
+                    if (classes.length >= 4) {
+                        heavyDays++;
+                    }
+
+                    for (let i = 0; i < classes.length - 1; i++) {
+                        const gap = classes[i + 1].start - classes[i].end;
+                        if (gap >= 180) { // 3 hours gap (180 mins)
+                            longGaps++;
+                        }
+                    }
+                });
+
+                return { daysOff, longGaps, heavyDays };
+            };
+
+            const getAllSectionsForCopy = (schedule) => {
+                const grouped = {};
+                schedule.forEach(sec => {
+                    if (!grouped[sec.courseId]) grouped[sec.courseId] = { courseName: sec.courseName, courseId: sec.courseId, sections: [] };
+                    grouped[sec.courseId].sections.push(sec);
+                });
+                return Object.values(grouped);
+            };
+
+            const printSchedule = () => {
+                window.print();
+            };
+
+            const exportScheduleImage = async () => {
+                try {
+                    const schedule = schedules[currentIdx];
+                    if (!schedule) return;
+                    const hourHeight = 64, headerHeight = 92, timeWidth = 110, dayWidth = 255;
+                    const canvas = document.createElement("canvas");
+                    canvas.width = timeWidth + dayWidth * DAYS.length;
+                    canvas.height = headerHeight + hourHeight * (GRID_END - GRID_START) + 20;
+                    const ctx = canvas.getContext("2d");
+                    const background = darkMode ? "#0f172a" : "#ffffff";
+                    const textColor = darkMode ? "#f8fafc" : "#1e293b";
+                    const lineColor = darkMode ? "#334155" : "#dbe3ee";
+                    ctx.fillStyle = background;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.direction = "rtl";
+                    ctx.textAlign = "center";
+                    ctx.fillStyle = textColor;
+                    ctx.font = "700 25px 'IBM Plex Sans Arabic'";
+                    ctx.fillText("جدولي الدراسي", canvas.width / 2, 34);
+                    ctx.font = "15px 'IBM Plex Sans Arabic'";
+                    ctx.fillStyle = darkMode ? "#94a3b8" : "#64748b";
+                    ctx.fillText(new Date().toLocaleDateString("ar-SA"), canvas.width / 2, 60);
+                    ctx.fillStyle = darkMode ? "#1e293b" : "#f8fafc";
+                    ctx.fillRect(0, headerHeight, canvas.width, 45);
+                    ctx.strokeStyle = lineColor;
+                    ctx.lineWidth = 1;
+                    for (let col = 0; col <= DAYS.length; col++) {
+                        const x = timeWidth + col * dayWidth;
+                        ctx.beginPath(); ctx.moveTo(x, headerHeight); ctx.lineTo(x, canvas.height - 20); ctx.stroke();
+                    }
+                    for (let hour = 0; hour <= GRID_END - GRID_START; hour++) {
+                        const y = headerHeight + 45 + hour * hourHeight;
+                        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+                    }
+                    ctx.fillStyle = textColor;
+                    ctx.font = "700 15px 'IBM Plex Sans Arabic'";
+                    DAYS.forEach((day, index) => ctx.fillText(DAY_LABELS[day], timeWidth + index * dayWidth + dayWidth / 2, headerHeight + 29));
+                    ctx.font = "13px 'IBM Plex Sans Arabic'";
+                    HOURS.forEach((hour, index) => {
+                        ctx.fillStyle = darkMode ? "#94a3b8" : "#64748b";
+                        ctx.fillText(formatTime(`${String(hour).padStart(2, "0")}:00`, use12hFormat), timeWidth / 2, headerHeight + 66 + index * hourHeight);
+                    });
+                    schedule.forEach(section => {
+                        const color = courseColors[section.courseId] || COLORS[0];
+                        section.slots.forEach(slot => slot.days.forEach(day => {
+                            const dayIndex = DAYS.indexOf(day);
+                            if (dayIndex < 0 || !slot.start || !slot.end) return;
+                            const start = timeToMin(slot.start) - GRID_START * 60;
+                            const duration = timeToMin(slot.end) - timeToMin(slot.start);
+                            if (start < 0 || duration <= 0) return;
+                            const x = timeWidth + dayIndex * dayWidth + 8;
+                            const y = headerHeight + 45 + (start / 60) * hourHeight + 3;
+                            const width = dayWidth - 16;
+                            const height = Math.max(34, (duration / 60) * hourHeight - 6);
+                            ctx.fillStyle = color.bg;
+                            ctx.globalAlpha = 0.16;
+                            ctx.fillRect(x, y, width, height);
+                            ctx.globalAlpha = 1;
+                            ctx.strokeStyle = color.bg;
+                            ctx.lineWidth = 2;
+                            ctx.strokeRect(x, y, width, height);
+                            ctx.fillStyle = textColor;
+                            ctx.font = "700 13px 'IBM Plex Sans Arabic'";
+                            ctx.fillText(section.courseId, x + width / 2, y + 18);
+                            ctx.font = "12px 'IBM Plex Sans Arabic'";
+                            ctx.fillText(`${formatTime(slot.start, use12hFormat)} - ${formatTime(slot.end, use12hFormat)}`, x + width / 2, y + Math.min(height - 8, 35));
+                        }));
+                    });
+                    const link = document.createElement("a");
+                    link.download = `جدولي-${new Date().toISOString().slice(0, 10)}.png`;
+                    link.href = canvas.toDataURL("image/png");
+                    link.click();
+                    showToast("تم حفظ صورة الجدول");
+                } catch (error) {
+                    showModal("تعذّر التصدير", "حدث خطأ أثناء إنشاء الصورة. جرّب مرة أخرى.");
+                }
+            };
+
+            const saveCurrentSchedule = () => {
+                if (!schedules[currentIdx]) return;
+                const saved = {
+                    id: `${Date.now()}`,
+                    name: `جدول محفوظ ${savedSchedules.length + 1}`,
+                    sections: schedules[currentIdx],
+                    courses,
+                    savedAt: new Date().toLocaleDateString('ar-SA'),
+                };
+                setSavedSchedules(previous => {
+                    const next = [...previous, saved];
+                    try { localStorage.setItem('savedSchedules', JSON.stringify(next)); }
+                    catch { showModal("تعذر الحفظ", "تعذر حفظ الجدول في المتصفح. تأكد من أن التخزين المحلي مسموح."); }
+                    return next;
+                });
+                setSavedPanelOpen(true);
+                showToast("تم حفظ الجدول في المحفوظات");
+            };
+
+            const shareCurrentSchedule = () => {
+                if (!schedules[currentIdx]) return;
+                try {
+                    const currentSecs = schedules[currentIdx];
+                    const usedCourseIds = new Set(currentSecs.map(s => s.courseId));
+                    const usedSectionIds = new Set(currentSecs.map(s => s.id));
+                    
+                    const minifiedCourses = (courses || [])
+                        .filter(c => c && c.id && usedCourseIds.has(c.id))
+                        .map(c => ({ id: c.id, name: c.name, credits: c.credits, types: {} }));
+
+                    const payload = {
+                        sections: currentSecs,
+                        courses: minifiedCourses
+                    };
+                    const jsonStr = JSON.stringify(payload);
+                    const encoded = encodeURIComponent(btoa(unescape(encodeURIComponent(jsonStr))));
+                    const shareUrl = `${window.location.origin}${window.location.pathname}#share=${encoded}`;
+                    
+                    const handleSuccess = () => {
+                        showToast("تم نسخ رابط المشاركة 🔗");
+                        showModal("تم نسخ رابط المشاركة 🔗", "تم نسخ رابط تفاصيل الجدول إلى الحافظة بنجاح!\nيمكنك الآن إرساله لزملائك ليفتحوا نفس الجدول فوراً عند ضغط الرابط.", false);
+                    };
+
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(shareUrl).then(handleSuccess).catch(err => {
+                            showModal("تعذر المشاركة", "حدث خطأ أثناء النسخ: " + err.message);
+                        });
+                    } else {
+                        const textArea = document.createElement("textarea");
+                        textArea.value = shareUrl;
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        try {
+                            document.execCommand('copy');
+                            handleSuccess();
+                        } catch (err) {
+                            showModal("تعذر المشاركة", "متصفحك لا يدعم النسخ التلقائي.");
+                        }
+                        document.body.removeChild(textArea);
+                    }
+                } catch (e) {
+                    showModal("تعذر المشاركة", "خطأ داخلي: " + e.message);
+                }
+            };
+
+            useEffect(() => {
+                try {
+                    const hash = window.location.hash;
+                    if (hash.includes('#share=')) {
+                        const raw = hash.split('#share=')[1];
+                        const jsonStr = decodeURIComponent(escape(atob(decodeURIComponent(raw))));
+                        const data = JSON.parse(jsonStr);
+                        if (data && data.sections) {
+                            setCourses(data.courses || []);
+                            setSelectedIds((data.courses || []).map(course => course.id));
+                            setSchedules([data.sections]);
+                            setCurrentIdx(0);
+                            setView("result");
+                            showToast("تم تحميل الجدول المشارَك بنجاح ✨");
+                        }
+                    }
+                } catch (err) {
+                    console.warn("Could not load shared schedule:", err);
+                }
+            }, []);
+
+            const openSavedSchedule = (saved) => {
+                setCourses(saved.courses || []);
+                setSelectedIds((saved.courses || []).map(course => course.id));
+                setSchedules([saved.sections]);
+                setCurrentIdx(0);
+                setView("result");
+                setSavedPanelOpen(false);
+            };
+
+            const hasActiveConflicts = Object.keys(realTimeConflicts).length > 0;
+
+            return (
+                <div className="app-shell">
+
+                    {isExtracting && (
+                        <div className="premium-overlay">
+                            <div className="premium-spinner"></div>
+                            <div className="premium-text">
+                                {loadingPhase === 0 ? "جاري قراءة الملف..." :
+                                 loadingPhase === 1 ? "جاري تحليل الأوقات والشعب..." :
+                                 "بناء الجدول الذكي... ⏳"}
+                            </div>
+                            <div className="premium-subtext">يرجى الانتظار، السحر يحدث الآن ✨</div>
+                        </div>
+                    )}
+
+                    <button className="theme-toggle-btn no-print" onClick={() => setDarkMode(!darkMode)} title="تبديل الوضع">
+                        {darkMode ? '☀️' : '🌙'}
+                    </button>
+
+                    <CustomModal isOpen={modal.isOpen} title={modal.title} message={modal.message} isError={modal.isError} onClose={closeModal} />
+
+                    <CustomModal isOpen={helpModalOpen} title="طريقة استخراج الجدول 📋" isError={false} onClose={() => setHelpModalOpen(false)}>
+                        <ul className="help-list">
+                            <li><b>1.</b> سجل دخولك في بوابة النظام الأكاديمي (أكاديميا).</li>
+                            <li><b>2.</b> اذهب إلى قائمة <b>"المقررات المطروحة"</b>.</li>
+                            <li><b>3.</b> اختر الكلية والتخصص واضغط <b>"بحث"</b> لتظهر الجداول.</li>
+                            <li><b>4.</b> اضغط بزر الفأرة الأيمن في أي مكان بالشاشة، واختر <b>"حفظ كـ" (Save As)</b>.</li>
+                            <li><b>5.</b> في خيار "حفظ كنوع"، تأكد من اختيار <b>(Webpage, HTML Only)</b> واحفظ الملف.</li>
+                            <li><b>6.</b> ارجع لهذه الأداة وارفع الملف.</li>
+                        </ul>
+                    </CustomModal>
+
+                    <CustomModal isOpen={savedPanelOpen} title="🔖 الجداول المحفوظة" isError={false} onClose={() => setSavedPanelOpen(false)}>
+                        {savedSchedules.length ? (
+                            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                                {savedSchedules.map(saved => (
+                                    <div key={saved.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px", padding: "10px", background: "var(--hover-bg)", border: "1px solid var(--border-color)", borderRadius: "10px" }}>
+                                        <button onClick={() => openSavedSchedule(saved)} style={{ flex: 1, textAlign: "right", border: "none", background: "transparent", color: "var(--text-main)", cursor: "pointer", fontFamily: "IBM Plex Sans Arabic, sans-serif", fontWeight: "bold" }}>{saved.name}<small style={{ display: "block", color: "var(--text-muted)", marginTop: "3px" }}>{saved.savedAt}</small></button>
+                                        <button onClick={() => setSavedSchedules(previous => previous.filter(item => item.id !== saved.id))} title="حذف الجدول" style={{ border: "none", background: "var(--danger-bg)", color: "var(--danger-text)", cursor: "pointer", borderRadius: "7px", padding: "6px 9px" }}>حذف</button>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : <p style={{ color: "var(--text-muted)", textAlign: "center" }}>لا توجد جداول محفوظة حتى الآن.</p>}
+                    </CustomModal>
+
+                    <CustomModal isOpen={!!settingsModalCourse} title={`إعدادات: ${settingsModalCourse?.name || ""}`} isError={false} onClose={() => setSettingsModalCourse(null)}>
+                        {settingsModalCourse && (
+                            <div>
+                                <p style={{ color: "var(--text-muted)", fontSize: "14px", marginBottom: "15px" }}>اختر الدكاترة الذين تفضلهم لهذه المادة. (إذا لم تختر أحداً، سيتم البحث في جميع الشُعب).</p>
+                                <div style={{ display: "flex", flexDirection: "column", gap: "10px", maxHeight: "300px", overflowY: "auto", paddingRight: "5px" }}>
+                                    {Array.from(new Set(Object.values(settingsModalCourse.types).flat().map(s => s.instructor))).map(instructor => {
+                                        const isSelected = (courseInstructors[settingsModalCourse.id] || []).includes(instructor);
+                                        return (
+                                            <div key={instructor} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px", background: "var(--hover-bg)", borderRadius: "8px", border: isSelected ? "1px solid #3b82f6" : "1px solid transparent", cursor: "pointer", transition: "0.2s" }}
+                                                onClick={() => {
+                                                    setCourseInstructors(prev => {
+                                                        const coursePref = prev[settingsModalCourse.id] || [];
+                                                        if (coursePref.includes(instructor)) {
+                                                            const updated = coursePref.filter(i => i !== instructor);
+                                                            if (updated.length === 0) {
+                                                                const newObj = { ...prev };
+                                                                delete newObj[settingsModalCourse.id];
+                                                                return newObj;
+                                                            }
+                                                            return { ...prev, [settingsModalCourse.id]: updated };
+                                                        } else {
+                                                            return { ...prev, [settingsModalCourse.id]: [...coursePref, instructor] };
+                                                        }
+                                                    });
+                                                }}>
+                                                <span style={{ fontWeight: "bold", color: "var(--text-main)" }}>{instructor}</span>
+                                                <div style={{ width: "20px", height: "20px", borderRadius: "5px", border: "2px solid #3b82f6", display: "flex", alignItems: "center", justifyContent: "center", background: isSelected ? "#3b82f6" : "transparent" }}>
+                                                    {isSelected && <span style={{ color: "white", fontSize: "14px" }}>✔</span>}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+                    </CustomModal>
+
+                    <div className={`copy-toast ${toastText ? 'show' : ''}`}>✅ تم نسخ رقم الشعبة: {toastText}</div>
+
+                    <div className="app-container">
+
+                        {/* Header */}
+                        <div className="no-print app-header">
+                            <div className="brand">
+                                <div className="brand-mark">🗓️</div>
+                                <h1>منظم جدول</h1>
+                            </div>
+                            <p className="brand-subtitle">ابنِ جدولك الدراسي بأقل تعارضات وفي دقائق</p>
+                            <div className="progress-steps" aria-label="مراحل إنشاء الجدول">
+                                <div className={`progress-step ${view === "upload" ? "active" : ""}`}><span className="progress-number">1</span>رفع الملف</div>
+                                <div className={`progress-step ${view === "select" ? "active" : ""}`}><span className="progress-number">2</span>اختيار المواد</div>
+                                <div className={`progress-step ${view === "result" || view === "coop_result" ? "active" : ""}`}><span className="progress-number">3</span>الجدول</div>
+                            </div>
+
+                            <button className="btn-animate" onClick={() => setSavedPanelOpen(true)} style={{ position: "absolute", left: "20px", top: "15px", background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.45)", color: "white", borderRadius: "10px", padding: "7px 10px", fontSize: "12px", fontWeight: "bold", cursor: "pointer" }}>🔖 المحفوظات {savedSchedules.length ? `(${savedSchedules.length})` : ""}</button>
+
+                            {view === "upload" && (
+                                <button className="btn-animate" onClick={() => setHelpModalOpen(true)} style={{
+                                    position: 'absolute', right: '20px', top: '15px', background: 'transparent',
+                                    border: '2px solid rgba(255,255,255,0.5)', color: 'white', borderRadius: '50%',
+                                    width: '32px', height: '32px', fontSize: '18px', fontWeight: 'bold', cursor: 'pointer',
+                                    display: 'flex', justifyContent: 'center', alignItems: 'center'
+                                }}>?</button>
+                            )}
+
+                            {view === "select" && (
+                                <div className="fade-in-up" style={{ display: "flex", justifyContent: "center", gap: "15px", flexWrap: "wrap", marginTop: "15px" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: "10px", background: "rgba(255,255,255,0.1)", padding: "5px 15px", borderRadius: "20px" }}>
+                                        <span style={{ fontSize: "13px", fontWeight: "bold", color: isSummerTerm ? "#fcd34d" : "white", transition: "0.3s" }}>الترم الصيفي</span>
+                                        <label className="switch">
+                                            <input type="checkbox" className="summer-toggle" checked={isSummerTerm} onChange={e => { setIsSummerTerm(e.target.checked); setSelectedIds([]); }} />
+                                            <span className="slider"></span>
+                                        </label>
+                                    </div>
+                                    <div style={{ display: "flex", alignItems: "center", gap: "10px", background: "rgba(255,255,255,0.1)", padding: "5px 15px", borderRadius: "20px" }}>
+                                        <span style={{ fontSize: "13px", fontWeight: "bold", color: "white" }}>إخفاء المغلقة</span>
+                                        <label className="switch">
+                                            <input type="checkbox" checked={hideClosed} onChange={() => setHideClosed(!hideClosed)} />
+                                            <span className="slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="app-content">
+
+                            {view === "upload" && (
+                                <div className="fade-in-up upload-zone">
+                                    <div style={{ fontSize: "50px", marginBottom: "20px" }}>📄</div>
+                                    <h2 style={{ marginBottom: "10px", color: "var(--text-main)" }}>ارفع ملف المقررات (HTML)</h2>
+                                    {savedSchedules.length > 0 && (
+                                        <div style={{ margin: "22px auto 0", maxWidth: "620px", textAlign: "right", background: "var(--card-bg)", border: "1px solid var(--border-color)", borderRadius: "12px", padding: "12px" }}>
+                                            <div style={{ fontWeight: "bold", marginBottom: "8px", color: "var(--text-main)" }}>🔖 الجداول المحفوظة</div>
+                                            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+                                                {savedSchedules.map(saved => (
+                                                    <div key={saved.id} style={{ display: "flex", alignItems: "center", background: "var(--hover-bg)", borderRadius: "8px", overflow: "hidden" }}>
+                                                        <button onClick={() => openSavedSchedule(saved)} style={{ border: "none", background: "transparent", color: "var(--text-main)", cursor: "pointer", padding: "8px 10px", fontFamily: "IBM Plex Sans Arabic, sans-serif" }}>{saved.name}</button>
+                                                        <button onClick={() => setSavedSchedules(previous => previous.filter(item => item.id !== saved.id))} title="حذف" style={{ border: "none", borderRight: "1px solid var(--border-color)", background: "transparent", color: "var(--danger-text)", cursor: "pointer", padding: "8px 9px" }}>×</button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                    <input type="file" accept=".html" onChange={handleFileUpload} style={{ display: "none" }} id="fileInput" />
+                                    <label htmlFor="fileInput" className="btn-animate" style={{
+                                        background: "#3b82f6", color: "white", padding: "12px 35px", borderRadius: "12px",
+                                        cursor: "pointer", fontWeight: "bold", fontSize: "16px", display: "inline-block",
+                                        boxShadow: "0 4px 10px rgba(59, 130, 246, 0.3)", marginTop: "15px"
+                                    }}>اختيار الملف</label>
+                                </div>
+                            )}
+
+                            {view === "select" && (
+                                <div key="select-view" className="page-enter">
+                                    <div className="fade-in-up" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "10px" }}>
+                                        <h3 style={{ margin: 0, color: "var(--text-main)" }}>
+                                            اختر المواد ({selectedIds.length})
+                                            {isSummerTerm && <span style={{ fontSize: "13px", color: "var(--danger-text)", marginRight: "10px", padding: "4px 10px", background: "var(--danger-bg)", borderRadius: "6px" }}>الحد الأقصى: 3 مواد</span>}
+                                        </h3>
+                                        <div style={{ display: "flex", gap: "15px", alignItems: "center", flexWrap: "wrap" }}>
+                                            {!isSummerTerm && (
+                                                <div style={{
+                                                    background: totalCredits < 12 ? "var(--warning-bg)" : (totalCredits > 20 ? "var(--danger-bg)" : "var(--success-bg)"),
+                                                    color: totalCredits < 12 ? "var(--warning-text)" : (totalCredits > 20 ? "var(--danger-text)" : "var(--success-text)"),
+                                                    padding: "10px 15px", borderRadius: "10px", fontWeight: "bold",
+                                                    border: `1px solid ${totalCredits < 12 ? "var(--border-color)" : (totalCredits > 20 ? "var(--danger-border)" : "var(--success-border)")}`,
+                                                    transition: "0.3s"
+                                                }}>
+                                                    الساعات: <span style={{ fontSize: "18px" }}>{totalCredits}</span> / 20
+                                                </div>
+                                            )}
+                                            <button className={`btn-animate ${selectedIds.length && !hasActiveConflicts ? 'btn-pulse' : ''}`} onClick={generate}
+                                                disabled={selectedIds.length === 0 || hasActiveConflicts}
+                                                style={{
+                                                    background: selectedIds.length && !hasActiveConflicts ? "#10b981" : "var(--text-muted)",
+                                                    color: "white", border: "none", padding: "12px 25px",
+                                                    borderRadius: "10px", fontWeight: "bold",
+                                                    cursor: selectedIds.length && !hasActiveConflicts ? "pointer" : "not-allowed",
+                                                    boxShadow: selectedIds.length && !hasActiveConflicts ? "0 4px 10px rgba(16, 185, 129, 0.3)" : "none"
+                                                }}>توليد الجداول ⚡</button>
+                                        </div>
+                                    </div>
+
+                                    <div style={{ marginBottom: "15px", display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                                        <input
+                                            className="search-input"
+                                            type="text"
+                                            placeholder="🔍 بحث باسم المادة أو الكود..."
+                                            value={instructorFilter}
+                                            onChange={e => setInstructorFilter(e.target.value)}
+                                            style={{
+                                                flex: 1, padding: "10px 15px", borderRadius: "10px",
+                                                border: "1px solid var(--border-color)", background: "var(--hover-bg)",
+                                                color: "var(--text-main)", fontSize: "14px", outline: "none",
+                                                fontFamily: "IBM Plex Sans Arabic, sans-serif"
+                                            }}
+                                        />
+                                    </div>
+
+                                    <div style={{ marginBottom: "18px", display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                                        <select value="" onChange={e => { const day = e.target.value; if (day && !selectedDays.includes(day)) setSelectedDays(previous => [...previous, day]); }} style={{ minWidth: "155px", padding: "10px 12px", borderRadius: "10px", border: "1px solid var(--border-color)", background: "var(--card-bg)", color: "var(--text-main)", fontFamily: "IBM Plex Sans Arabic, sans-serif" }}>
+                                            <option value="">+ إضافة يوم</option>
+                                            {DAYS.filter(day => !selectedDays.includes(day)).map(day => <option key={day} value={day}>{DAY_LABELS[day]}</option>)}
+                                        </select>
+                                        <select value="" onChange={e => { const instructor = e.target.value; if (instructor && !selectedInstructors.includes(instructor)) setSelectedInstructors(previous => [...previous, instructor]); }} style={{ flex: 1, minWidth: "190px", padding: "10px 12px", borderRadius: "10px", border: "1px solid var(--border-color)", background: "var(--card-bg)", color: "var(--text-main)", fontFamily: "IBM Plex Sans Arabic, sans-serif" }}>
+                                            <option value="">+ إضافة عضو هيئة تدريس</option>
+                                            {instructors.filter(instructor => !selectedInstructors.includes(instructor)).map(instructor => <option key={instructor} value={instructor}>{instructor}</option>)}
+                                        </select>
+                                        {(selectedDays.length || selectedInstructors.length || instructorFilter) && <button className="btn-animate" onClick={clearFilters} style={{ padding: "10px 14px", borderRadius: "10px", border: "1px solid var(--border-color)", background: "var(--hover-bg)", color: "var(--text-main)", cursor: "pointer", fontFamily: "IBM Plex Sans Arabic, sans-serif" }}>مسح الفلاتر</button>}
+                                    </div>
+
+                                    {(selectedDays.length > 0 || selectedInstructors.length > 0) && (
+                                        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", margin: "-8px 0 18px" }}>
+                                            {selectedDays.map(day => <span key={day} style={{ display: "inline-flex", alignItems: "center", gap: "7px", padding: "7px 10px", borderRadius: "999px", background: "#dbeafe", color: "#1e40af", fontWeight: "bold", fontSize: "13px" }}>{DAY_LABELS[day]}<button onClick={() => setSelectedDays(previous => previous.filter(value => value !== day))} aria-label={`إلغاء ${DAY_LABELS[day]}`} style={{ border: "none", background: "transparent", color: "inherit", cursor: "pointer", fontSize: "18px", lineHeight: 1, padding: 0 }}>×</button></span>)}
+                                            {selectedInstructors.map(instructor => <span key={instructor} style={{ display: "inline-flex", alignItems: "center", gap: "7px", padding: "7px 10px", borderRadius: "999px", background: "#dcfce7", color: "#166534", fontWeight: "bold", fontSize: "13px" }}>{instructor}<button onClick={() => setSelectedInstructors(previous => previous.filter(value => value !== instructor))} aria-label={`إلغاء ${instructor}`} style={{ border: "none", background: "transparent", color: "inherit", cursor: "pointer", fontSize: "18px", lineHeight: 1, padding: 0 }}>×</button></span>)}
+                                        </div>
+                                    )}
+
+                                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 280px), 1fr))", gap: "15px" }}>
+                                        {courses
+                                            .filter(c => filterPhase !== "done" || !hasActiveFilters || courseMatchesFilters(c, instructorFilter, selectedDays, selectedInstructors))
+                                            .map((c, idx) => {
+                                                const isSelected = selectedIds.includes(c.id);
+                                                const allSections = Object.values(c.types).flat();
+                                                const openCount = allSections.filter(s => isSectionOpen(s.status)).length;
+                                                const closedCount = allSections.filter(s => isSectionClosed(s.status)).length;
+                                                const isCoop = c.name.includes("التدريب التعاوني");
+                                                const matchesFilter = courseMatchesFilters(c, instructorFilter, selectedDays, selectedInstructors);
+
+                                                let isDisabled = false;
+                                                if (hideClosed && openCount === 0 && !isCoop) isDisabled = true;
+
+                                                const courseConflicts = realTimeConflicts[c.id];
+                                                const isConflicting = isSelected && courseConflicts && courseConflicts.length > 0;
+
+                                                let borderColor = isSelected ? courseColors[c.id].bg : "var(--border-color)";
+                                                let bgColor = isSelected ? (darkMode ? "rgba(0,0,0,0.2)" : courseColors[c.id].light) : (isDisabled ? "var(--hover-bg)" : "var(--card-bg)");
+                                                if (isConflicting) { borderColor = "var(--danger-border)"; bgColor = "var(--danger-bg)"; }
+
+                                                const filterClass = hasActiveFilters && matchesFilter && filterPhase !== "none"
+                                                    ? " filter-highlight"
+                                                    : hasActiveFilters && !matchesFilter && (filterPhase === "highlight" || filterPhase === "fade")
+                                                        ? ` filter-dim${filterPhase === "fade" ? " filter-fading" : ""}`
+                                                        : "";
+
+                                                return (
+                                                    <div key={c.id} className={`stagger-item course-card${filterClass} ${!isSelected && !isDisabled ? 'pick-me-hover' : ''}`} role="button"
+                                                        tabIndex={isDisabled ? -1 : 0}
+                                                        aria-pressed={isSelected}
+                                                        aria-label={`${isSelected ? "إلغاء اختيار" : "اختيار"} ${c.name}`}
+                                                        onClick={() => !isDisabled && toggleSelection(c)}
+                                                        onKeyDown={e => {
+                                                            if (!isDisabled && (e.key === "Enter" || e.key === " ")) {
+                                                                e.preventDefault();
+                                                                toggleSelection(c);
+                                                            }
+                                                        }}
+                                                        style={{
+                                                            padding: "18px", borderRadius: "14px",
+                                                            border: `2px solid ${borderColor}`, background: bgColor,
+                                                            cursor: isDisabled ? "not-allowed" : "pointer",
+                                                            opacity: isDisabled ? 0.5 : 1,
+                                                            transition: "all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                                                            animationDelay: `${idx * 0.04}s`
+                                                        }}>
+                                                        <div style={{ fontWeight: "bold", fontSize: "16px", color: isConflicting ? "var(--danger-text)" : "var(--text-main)", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                                                            <span>{c.id}</span>
+                                                            <button
+                                                                onClick={(e) => { e.stopPropagation(); setSettingsModalCourse(c); }}
+                                                                style={{ background: "transparent", border: "none", cursor: "pointer", fontSize: "16px", padding: "4px", borderRadius: "6px" }}
+                                                                title="إعدادات المادة واختيار الدكاترة">
+                                                                ⚙️
+                                                            </button>
+                                                        </div>
+                                                        <div style={{ fontSize: "14px", color: isConflicting ? "var(--danger-text)" : "var(--text-muted)", marginTop: "2px" }}>{c.name}</div>
+                                                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "8px" }}>
+                                                            <div style={{ fontSize: "13px", color: isConflicting ? "var(--danger-text)" : "var(--text-main)", fontWeight: "bold" }}>{c.credits} ساعات</div>
+                                                            <div style={{ fontSize: "11px", color: "var(--text-muted)", fontWeight: "bold", background: "var(--hover-bg)", padding: "2px 6px", borderRadius: "4px" }}>يتطلب: {Object.keys(c.types).join(" + ")}</div>
+                                                        </div>
+                                                        {!isCoop ? (
+                                                            <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
+                                                                <span style={{ background: "var(--success-bg)", color: "var(--success-text)", padding: "4px 8px", borderRadius: "6px", fontSize: "12px", fontWeight: "bold", border: "1px solid var(--success-border)" }}>{openCount} مفتوحة</span>
+                                                                <span style={{ background: "var(--danger-bg)", color: "var(--danger-text)", padding: "4px 8px", borderRadius: "6px", fontSize: "12px", fontWeight: "bold", border: "1px solid var(--danger-border)" }}>{closedCount} مغلقة</span>
+                                                            </div>
+                                                        ) : (
+                                                            <div style={{ marginTop: "12px", fontSize: "12px", color: "var(--warning-text)", fontWeight: "bold", background: "var(--warning-bg)", padding: "4px 8px", borderRadius: "6px", display: "inline-block" }}>مقرر ميداني (بدون وقت محدد)</div>
+                                                        )}
+                                                        {isConflicting && (
+                                                            <div className="fade-in-up" style={{ marginTop: "15px", fontSize: "12px", color: "var(--danger-text)", fontWeight: "bold", background: "var(--danger-bg)", padding: "10px", borderRadius: "8px", border: "1px solid var(--danger-border)" }}>
+                                                                ⚠️ يتعارض مع: {courseConflicts.join("، ")}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Baloot Deck Area (Outside page-enter to prevent transform bug) */}
+                            {view === "select" && (
+                                <>
+                                    <div 
+                                        className={`baloot-overlay ${deckHovered && selectedIds.length > 0 ? 'active' : ''}`}
+                                        onClick={() => setDeckHovered(false)}
+                                    ></div>
+                                    <div 
+                                        className={`baloot-deck-container ${selectedIds.length > 0 ? 'has-cards' : ''} ${deckHovered ? 'hovered' : ''} ${isClearing === 'shaking' ? 'deck-shake' : ''}`}
+                                        onMouseEnter={() => setDeckHovered(true)}
+                                        onMouseLeave={() => { setDeckHovered(false); setDraggedIdx(null); }}
+                                        onClick={() => {
+                                            const isMobile = window.innerWidth <= 640;
+                                            if (isMobile) setDeckHovered(prev => !prev);
+                                        }}
+                                    >
+                                        {selectedIds.length > 0 && (
+                                            <div style={{
+                                                position: "absolute",
+                                                top: deckHovered ? "40px" : "-40px",
+                                                background: "rgba(15, 23, 42, 0.7)",
+                                                backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+                                                padding: "10px 20px",
+                                                borderRadius: "20px",
+                                                color: "white",
+                                                fontSize: "14px",
+                                                fontWeight: "bold",
+                                                display: "flex",
+                                                gap: "15px",
+                                                alignItems: "center",
+                                                border: "1px solid rgba(255,255,255,0.1)",
+                                                transition: "all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                                                opacity: deckHovered ? 1 : 0,
+                                                pointerEvents: deckHovered ? "auto" : "none",
+                                                zIndex: 10,
+                                                boxShadow: "0 10px 25px rgba(0,0,0,0.3)"
+                                            }}>
+                                                <span style={{ color: "#93c5fd" }}>المواد: {selectedIds.length}</span>
+                                                <span style={{ color: "#86efac" }}>الساعات: {selectedIds.reduce((sum, id) => {
+                                                    const c = courses.find(course => course.id === id);
+                                                    return sum + (c ? c.credits : 0);
+                                                }, 0)}</span>
+                                                <div style={{ width: "1px", height: "20px", background: "rgba(255,255,255,0.2)" }}></div>
+                                                <button 
+                                                    onClick={(e) => { 
+                                                        e.stopPropagation(); 
+                                                        if (isClearing) return;
+                                                        setIsClearing("gathering");
+                                                        setTimeout(() => {
+                                                            setIsClearing("shaking");
+                                                            setTimeout(() => {
+                                                                setIsClearing("scattering");
+                                                                setTimeout(() => {
+                                                                    setSelectedIds([]); 
+                                                                    setIsClearing(false);
+                                                                    setDeckHovered(false);
+                                                                }, 800);
+                                                            }, 600);
+                                                        }, 500);
+                                                    }}
+                                                    style={{
+                                                        background: "rgba(239, 68, 68, 0.8)", color: "white", border: "none", padding: "6px 12px", 
+                                                        borderRadius: "10px", fontSize: "12px", fontWeight: "bold", cursor: "pointer",
+                                                        transition: "background 0.2s"
+                                                    }}
+                                                    onMouseOver={e => e.target.style.background = "#ef4444"}
+                                                    onMouseOut={e => e.target.style.background = "rgba(239, 68, 68, 0.8)"}
+                                                >تفريغ الطاولة 🗑️</button>
+                                            </div>
+                                        )}
+                                        {selectedIds.map((id, index) => {
+                                            const c = courses.find(course => course.id === id);
+                                            if (!c) return null;
+                                            const totalCards = selectedIds.length;
+                                            const middle = (totalCards - 1) / 2;
+                                            const offset = index - middle;
+                                            
+                                            let transformStr = "";
+                                            if (isClearing === "scattering") {
+                                                const angle = (index / totalCards) * 360 * (Math.PI / 180);
+                                                const tx = Math.cos(angle) * window.innerWidth;
+                                                const ty = Math.sin(angle) * window.innerWidth - 300;
+                                                transformStr = `translate(${tx}px, ${ty}px) scale(0) rotate(${Math.random() * 720 - 360}deg)`;
+                                            } else if (isClearing === "gathering" || isClearing === "shaking") {
+                                                const isMobile = window.innerWidth <= 640;
+                                                transformStr = `translate(0px, ${isMobile ? -100 : -150}px) scale(1.1) rotate(0deg)`;
+                                            } else if (isThrowing) {
+                                                transformStr = `translate(${offset * 15}px, -60vh) scale(0) rotate(${offset * 45}deg)`;
+                                            } else if (deckHovered) {
+                                                const rot = offset * 8;
+                                                const isMobile = window.innerWidth <= 640;
+                                                const transX = offset * (isMobile ? 35 : 60);
+                                                const transY = Math.abs(offset) * 10 - window.innerHeight / 2 + 100;
+                                                transformStr = `translate(${transX}px, ${transY}px) scale(${isMobile ? 1.05 : 1.15}) rotate(${rot}deg)`;
+                                            } else {
+                                                const rot = offset * 4;
+                                                const isMobile = window.innerWidth <= 640;
+                                                const transX = offset * (isMobile ? 12 : 15);
+                                                const transY = Math.abs(offset) * 3;
+                                                transformStr = `translate(${transX}px, ${transY}px) scale(1) rotate(${rot}deg)`;
+                                            }
+
+                                            const courseConflicts = realTimeConflicts[c.id];
+                                            const isConflicting = courseConflicts && courseConflicts.length > 0;
+                                            const glowClass = isConflicting ? "conflict-glow" : "";
+                                            const isFlipped = flippedCards.has(c.id);
+
+                                            return (
+                                                <div 
+                                                    key={c.id} 
+                                                    className={`baloot-card`}
+                                                    draggable={deckHovered && !isThrowing && window.innerWidth > 640}
+                                                    onDragStart={(e) => setDraggedIdx(index)}
+                                                    onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                                                    onDrop={(e) => {
+                                                        e.preventDefault();
+                                                        if (draggedIdx === null || draggedIdx === index) return;
+                                                        const newIds = [...selectedIds];
+                                                        const item = newIds.splice(draggedIdx, 1)[0];
+                                                        newIds.splice(index, 0, item);
+                                                        setSelectedIds(newIds);
+                                                        setDraggedIdx(null);
+                                                    }}
+                                                    onDoubleClick={(e) => {
+                                                        e.stopPropagation();
+                                                        toggleSelection(c);
+                                                    }}
+                                                    style={{ 
+                                                        transform: transformStr,
+                                                        transitionDuration: (isThrowing || isClearing) ? '0.8s' : '0.5s',
+                                                        transitionDelay: isThrowing ? `${index * 0.1}s` : '0s',
+                                                        pointerEvents: isClearing ? 'none' : 'auto'
+                                                    }}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        if (deckHovered && !isThrowing) {
+                                                            setFlippedCards(prev => {
+                                                                const next = new Set(prev);
+                                                                if (next.has(c.id)) next.delete(c.id);
+                                                                else next.add(c.id);
+                                                                return next;
+                                                            });
+                                                        } else if (window.innerWidth <= 640) {
+                                                            setDeckHovered(true);
+                                                        }
+                                                    }}
+                                                    title={deckHovered ? "انقر لتعديل الدكاترة أو اسحب للترتيب" : ""}
+                                                >
+                                                    <div className="card-inner" style={{ transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)" }}>
+                                                        <div className={`card-front ${glowClass}`} style={{
+                                                            background: courseColors[c.id] ? `linear-gradient(145deg, ${courseColors[c.id].bg}, ${courseColors[c.id].light})` : 'linear-gradient(145deg, var(--card-bg), var(--hover-bg))',
+                                                            color: "white"
+                                                        }}>
+                                                            <div className="card-title" style={{ fontSize: "16px", fontWeight: "bold", textShadow: "0 2px 4px rgba(0,0,0,0.3)" }}>{c.id}</div>
+                                                            <div className="card-name" style={{ fontSize: "12px", marginTop: "5px", color: "rgba(255,255,255,0.9)", overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", textShadow: "0 1px 3px rgba(0,0,0,0.3)" }}>{c.name}</div>
+                                                            {deckHovered && (
+                                                                <div 
+                                                                    className="card-delete"
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        if (!isThrowing) toggleSelection(c);
+                                                                    }}
+                                                                    style={{ position: "absolute", top: "5px", right: "5px", background: "var(--danger-bg)", color: "var(--danger-text)", width: "22px", height: "22px", borderRadius: "50%", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "14px", fontWeight: "bold", border: "1px solid var(--danger-border)", cursor: "pointer", zIndex: 10, transition: "0.2s" }}
+                                                                    onMouseOver={(e) => e.target.style.transform = "scale(1.2)"}
+                                                                    onMouseOut={(e) => e.target.style.transform = "scale(1)"}
+                                                                    title="إزالة المادة"
+                                                                >×</div>
+                                                            )}
+                                                        </div>
+
+                                                        <div className={`card-back ${glowClass}`}>
+                                                            <div style={{ fontSize: "14px", fontWeight: "bold", textShadow: "0 2px 4px rgba(0,0,0,0.5)", color: "white" }}>إعدادات</div>
+                                                            <button 
+                                                                onClick={(e) => { e.stopPropagation(); setSettingsModalCourse(c); }} 
+                                                                style={{ width: "100%", padding: "6px", background: "rgba(59, 130, 246, 0.9)", color: "white", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "8px", fontWeight: "bold", cursor: "pointer", fontSize: "12px", transition: "0.2s" }}
+                                                                onMouseOver={e => e.target.style.background = "#2563eb"}
+                                                                onMouseOut={e => e.target.style.background = "rgba(59, 130, 246, 0.9)"}
+                                                            >
+                                                                ⚙️ الدكاترة
+                                                            </button>
+                                                            <button 
+                                                                onClick={(e) => { e.stopPropagation(); toggleSelection(c); }} 
+                                                                style={{ width: "100%", padding: "6px", background: "rgba(239, 68, 68, 0.9)", color: "white", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "8px", fontWeight: "bold", cursor: "pointer", fontSize: "12px", transition: "0.2s" }}
+                                                                onMouseOver={e => e.target.style.background = "#dc2626"}
+                                                                onMouseOut={e => e.target.style.background = "rgba(239, 68, 68, 0.9)"}
+                                                            >
+                                                                🗑️ إزالة
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </>
+                            )}
+
+                            {view === "coop_result" && (
+                                <div className="fade-in-up" style={{ textAlign: "center", padding: "80px", border: "2px dashed #3b82f6", borderRadius: "20px", background: "rgba(59, 130, 246, 0.1)" }}>
+                                    <div style={{ fontSize: "60px", marginBottom: "15px" }}>🏢</div>
+                                    <h2 style={{ color: "#3b82f6", margin: "0 0 10px 0" }}>مقرر ميداني</h2>
+                                    <p style={{ color: "var(--text-muted)", fontSize: "16px" }}>التدريب التعاوني لا يمتلك جدولاً زمنياً. يرجى التواصل مع كليتك / مشرف التدريب للحصول على التفاصيل.</p>
+                                    <button className="btn-animate" onClick={() => setView("select")} style={{ marginTop: "20px", background: "#3b82f6", color: "white", border: "none", padding: "12px 25px", borderRadius: "10px", cursor: "pointer", fontWeight: "bold" }}>العودة للمواد</button>
+                                </div>
+                            )}
+
+                            {view === "result" && (
+                                <div key="result-view" className="page-enter">
+                                    <div className="no-print" style={{ display: "flex", flexDirection: "column", gap: "15px", marginBottom: "20px" }}>
+                                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "10px" }}>
+                                            <button className="btn-animate" onClick={() => setView("select")} style={{ background: "var(--card-bg)", color: "var(--text-main)", border: "1px solid var(--border-color)", padding: "10px 18px", borderRadius: "12px", cursor: "pointer", fontWeight: "bold", fontSize: "14px", boxShadow: "var(--shadow)", display: "inline-flex", alignItems: "center", gap: "6px" }}>← تعديل الخيارات</button>
+                                            
+                                            {schedules.length > 0 && (
+                                                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
+                                                    <button className="btn-animate" onClick={saveCurrentSchedule} style={{ background: "var(--card-bg)", color: "var(--text-main)", border: "1px solid var(--border-color)", padding: "10px 16px", borderRadius: "12px", cursor: "pointer", fontWeight: "bold", fontSize: "13px", boxShadow: "var(--shadow)" }}>🔖 حفظ</button>
+                                                    <button className="btn-animate" onClick={exportScheduleImage} style={{ background: "var(--card-bg)", color: "var(--text-main)", border: "1px solid var(--border-color)", padding: "10px 16px", borderRadius: "12px", cursor: "pointer", fontWeight: "bold", fontSize: "13px", boxShadow: "var(--shadow)" }}>🖼️ صورة</button>
+                                                    <button className="btn-animate" onClick={shareCurrentSchedule} style={{ background: "#2563eb", color: "#ffffff", border: "none", padding: "10px 18px", borderRadius: "12px", cursor: "pointer", fontWeight: "bold", fontSize: "13px", boxShadow: "0 4px 14px rgba(37,99,235,0.3)" }}>🔗 مشاركة</button>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {schedules.length > 0 && (
+                                            <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap", justifyContent: "center" }}>
+                                                <div style={{ display: "flex", alignItems: "center", gap: "10px", background: "var(--card-bg)", padding: "8px 15px", borderRadius: "12px", border: "1px solid var(--border-color)", boxShadow: "var(--shadow)" }}>
+                                                    <span style={{ fontSize: "13px", fontWeight: "bold", color: "var(--text-main)" }}>صيغة 12h</span>
+                                                    <label className="switch" style={{ width: "40px", height: "22px" }}>
+                                                        <input type="checkbox" className="time-toggle" checked={use12hFormat} onChange={() => setUse12hFormat(!use12hFormat)} />
+                                                        <span className="slider" style={{ borderRadius: "20px" }}></span>
+                                                    </label>
+                                                </div>
+
+                                                <div style={{ display: "flex", alignItems: "center", gap: "10px", background: "var(--card-bg)", padding: "8px 15px", borderRadius: "12px", border: "1px solid var(--border-color)", boxShadow: "var(--shadow)" }}>
+                                                    <span style={{ fontSize: "13px", fontWeight: "bold", color: "var(--text-main)" }}>🎨 الألوان</span>
+                                                    <select className="palette-select" value={colorPalette} onChange={e => setColorPalette(e.target.value)}>
+                                                        <option value="default">أساسي</option>
+                                                        <option value="pastel">باستيل هادئ</option>
+                                                        <option value="neon">نيون ساطع</option>
+                                                    </select>
+                                                </div>
+
+                                                <div style={{ background: "var(--card-bg)", padding: "6px 15px", borderRadius: "12px", fontWeight: "bold", color: "var(--text-main)", display: "flex", alignItems: "center", gap: "10px", border: "1px solid var(--border-color)", boxShadow: "var(--shadow)" }}>
+                                                    <button className="btn-animate" onClick={() => setCurrentIdx(prev => Math.max(0, prev - 1))} disabled={currentIdx === 0}
+                                                        style={{ padding: "6px 12px", borderRadius: "8px", border: "none", background: currentIdx === 0 ? "transparent" : "var(--hover-bg)", color: currentIdx === 0 ? "var(--text-muted)" : "var(--text-main)", cursor: currentIdx === 0 ? "not-allowed" : "pointer" }}>السابق</button>
+                                                    <span style={{ direction: "rtl" }}>الجدول {currentIdx + 1} من {schedules.length}</span>
+                                                    <button className="btn-animate" onClick={() => setCurrentIdx(prev => Math.min(schedules.length - 1, prev + 1))} disabled={currentIdx === schedules.length - 1}
+                                                        style={{ padding: "6px 12px", borderRadius: "8px", border: "none", background: currentIdx === schedules.length - 1 ? "transparent" : "var(--hover-bg)", color: currentIdx === schedules.length - 1 ? "var(--text-muted)" : "var(--text-main)", cursor: currentIdx === schedules.length - 1 ? "not-allowed" : "pointer" }}>التالي</button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {schedules.length > 0 ? (
+                                        <>
+                                            {(() => {
+                                                const insights = analyzeSchedule(schedules[currentIdx]);
+                                                return (
+                                                    <div className="smart-insights-box no-print">
+                                                        <div className="smart-insights-title">🤖 تحليل الجدول الذكي:</div>
+                                                        <div className="smart-badges">
+                                                            {insights.daysOff > 0 ? (
+                                                                <div className="smart-badge badge-success">🎉 {insights.daysOff} أيام أوف!</div>
+                                                            ) : (
+                                                                <div className="smart-badge badge-warning">😔 لا يوجد أيام أوف</div>
+                                                            )}
+                                                            {insights.longGaps > 0 && (
+                                                                <div className="smart-badge badge-danger">⚠️ {insights.longGaps} فترات انتظار طويلة (3+ ساعات)</div>
+                                                            )}
+                                                            {insights.heavyDays > 0 && (
+                                                                <div className="smart-badge badge-warning">🔥 {insights.heavyDays} أيام ضغط (4 محاضرات فأكثر)</div>
+                                                            )}
+                                                            <div className="smart-badge" style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', color: 'var(--text-main)' }}>
+                                                                ⏱️ {getWeeklyHours(schedules[currentIdx])} ساعة أسبوعية
+                                                            </div>
+                                                            <div className="smart-badge" style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', color: 'var(--text-main)' }}>
+                                                                📚 {getAllSectionsForCopy(schedules[currentIdx]).length} مواد مختارة
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })()}
+
+                                            <div className="schedule-workspace">
+                                            <aside className="schedule-sidebar no-print">
+                                                <h3 className="schedule-sidebar-title"><span>المواد والشعب</span><span>{getAllSectionsForCopy(schedules[currentIdx]).length} مواد</span></h3>
+                                                {getAllSectionsForCopy(schedules[currentIdx]).map((group, gIdx) => {
+                                                    const color = courseColors[group.courseId] || COLORS[0];
+                                                    return <div key={group.courseId} className="course-summary-card" style={{
+                                                        background: darkMode ? "rgba(0,0,0,0.2)" : color.light,
+                                                        border: `1.5px solid ${color.border}`,
+                                                        borderRadius: "12px", padding: "12px 16px",
+                                                        animation: `popIn 0.3s ${gIdx * 0.05}s both`
+                                                    }}>
+                                                        <div style={{ fontWeight: "bold", color: darkMode ? color.darkText : color.bg, marginBottom: "8px", fontSize: "14px" }}>
+                                                            {group.courseName}
+                                                        </div>
+                                                        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                                                            {group.sections.map(sec => {
+                                                                const isOpen = isSectionOpen(sec.status);
+                                                                return (
+                                                                    <div key={sec.id} style={{
+                                                                        display: "flex", alignItems: "center", gap: "8px",
+                                                                        background: "var(--card-bg)", padding: "6px 12px", borderRadius: "8px",
+                                                                        border: `1px solid ${isOpen ? "var(--success-border)" : "var(--danger-border)"}`,
+                                                                        boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
+                                                                    }}>
+                                                                        <span style={{ fontSize: "11px", color: "var(--text-muted)", fontWeight: "bold" }}>{sec.type}:</span>
+                                                                        <span style={{ fontWeight: "bold", fontSize: "14px", color: "var(--text-main)" }}>{sec.id}</span>
+                                                                        <span style={{ fontSize: "11px", color: isOpen ? "var(--success-text)" : "var(--danger-text)", fontWeight: "bold" }}>
+                                                                            {isOpen ? "✅ مفتوحة" : "🔒 مغلقة"}
+                                                                        </span>
+                                                                        <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>| 👨‍🏫 {sec.instructor}</span>
+                                                                        <button className="btn-animate" onClick={() => copyToClipboard(sec.id)} title="نسخ رقم الشعبة"
+                                                                            style={{ background: "none", border: "none", cursor: "pointer", fontSize: "16px", padding: "0" }}>📋</button>
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    </div>;
+                                                })}
+                                            </aside>
+
+                                            <main className="schedule-main">
+                                                <div className="schedule-grid-frame">
+                                                    <TimeGrid sections={schedules[currentIdx]} courseColors={courseColors} use12h={use12hFormat} darkMode={darkMode} />
+                                                </div>
+                                            </main>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="fade-in-up" style={{ textAlign: "center", padding: "60px", border: "3px dashed var(--danger-border)", borderRadius: "20px", background: "var(--danger-bg)" }}>
+                                            <div style={{ fontSize: "60px", marginBottom: "15px" }}>⚠️</div>
+                                            <h2 style={{ color: "var(--danger-text)", margin: "0 0 15px 0" }}>تعارض حتمي في الجدول!</h2>
+
+                                            {conflictErrors.type === 'pairs' && (
+                                                <div style={{ marginTop: "20px", textAlign: "right", background: "var(--card-bg)", padding: "25px", borderRadius: "12px", border: "1px solid var(--danger-border)" }}>
+                                                    <h3 style={{ color: "var(--danger-text)", marginTop: 0 }}>🔍 المكتشف الآلي للتعارض:</h3>
+                                                    <p style={{ color: "var(--text-main)", fontSize: "15px", marginBottom: "15px" }}>يرجى الاستغناء عن إحدى المادتين المتعارضتين:</p>
+                                                    <ul style={{ color: "var(--danger-text)", fontWeight: "bold", paddingRight: "0", margin: 0, listStyleType: "none" }}>
+                                                        {conflictErrors.data.map((err, i) => (
+                                                            <li key={i} style={{ background: "var(--danger-bg)", padding: "10px 15px", borderRadius: "8px", marginBottom: "8px", border: "1px solid var(--danger-border)", display: "flex", alignItems: "center", gap: "10px" }}>
+                                                                <span>⚔️</span> {err.replace("⚔️", "-")}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            )}
+
+                                            {conflictErrors.type === 'culprits' && (
+                                                <div style={{ marginTop: "20px", textAlign: "right", background: "var(--card-bg)", padding: "25px", borderRadius: "12px", border: "1px solid var(--danger-border)" }}>
+                                                    <h3 style={{ color: "var(--danger-text)", marginTop: 0 }}>💡 الحل الذكي:</h3>
+                                                    <p style={{ color: "var(--text-main)", fontSize: "15px", marginBottom: "15px" }}>الجدول سيعمل بنجاح بحذف <b>مادة واحدة فقط</b> من:</p>
+                                                    <ul style={{ color: "var(--danger-text)", fontWeight: "bold", paddingRight: "0", margin: 0, listStyleType: "none", display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                                                        {conflictErrors.data.map((err, i) => (
+                                                            <li key={i} style={{ background: "var(--danger-bg)", padding: "10px 15px", borderRadius: "8px", border: "1px solid var(--danger-border)" }}>
+                                                                🗑️ {err}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            )}
+
+                                            {conflictErrors.type === 'complex' && (
+                                                <div style={{ marginTop: "20px", textAlign: "right", background: "var(--card-bg)", padding: "25px", borderRadius: "12px", border: "1px solid var(--danger-border)" }}>
+                                                    <h3 style={{ color: "var(--danger-text)", marginTop: 0 }}>تعارض معقد جداً:</h3>
+                                                    <p style={{ color: "var(--text-main)", fontSize: "15px", margin: 0, lineHeight: "1.7" }}>
+                                                        يوجد تداخل شديد بين المواد، أو لا توجد شعب متاحة.<br /><br />
+                                                        <strong>الحل:</strong> قم بإزالة أكثر من مادة، أو أوقف خيار "إخفاء المغلقة".
+                                                    </p>
+                                                </div>
+                                            )}
+
+                                            <button className="btn-animate" onClick={() => setView("select")} style={{ marginTop: "30px", background: "#ef4444", color: "white", border: "none", padding: "12px 30px", borderRadius: "10px", cursor: "pointer", fontWeight: "bold", fontSize: "16px" }}>العودة لتعديل المواد</button>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                        
+                        <footer className="footer">
+                            تطوير وهندسة الأوامر: <span>عبدالعزيز مشنوي</span> | مدعوم بالذكاء الاصطناعي
+                        </footer>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById("root"));
+        root.render(<App />);
+    </script>
+    <script>
+        (function() {
+            const canvas = document.getElementById('antigravity-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            const particles = Array.from({ length: 65 }, () => ({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.4,
+                vy: (Math.random() - 0.5) * 0.4,
+                r: Math.random() * 2.5 + 1.2,
+                alpha: Math.random() * 0.6 + 0.25
+            }));
+
+            function draw() {
+                ctx.clearRect(0, 0, width, height);
+                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                
+                if (isDark) {
+                    const g1 = ctx.createRadialGradient(width * 0.25, height * 0.25, 0, width * 0.25, height * 0.25, width * 0.5);
+                    g1.addColorStop(0, 'rgba(37, 99, 235, 0.22)');
+                    g1.addColorStop(1, 'transparent');
+                    ctx.fillStyle = g1;
+                    ctx.fillRect(0, 0, width, height);
+
+                    const g2 = ctx.createRadialGradient(width * 0.75, height * 0.65, 0, width * 0.75, height * 0.65, width * 0.5);
+                    g2.addColorStop(0, 'rgba(139, 92, 246, 0.18)');
+                    g2.addColorStop(1, 'transparent');
+                    ctx.fillStyle = g2;
+                    ctx.fillRect(0, 0, width, height);
+                }
+
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    p.x += p.vx; p.y += p.vy;
+                    if (p.x < 0) p.x = width;
+                    if (p.x > width) p.x = 0;
+                    if (p.y < 0) p.y = height;
+                    if (p.y > height) p.y = 0;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = isDark ? `rgba(147, 197, 253, ${p.alpha})` : `rgba(37, 99, 235, ${p.alpha * 0.6})`;
+                    ctx.fill();
+
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const p2 = particles[j];
+                        const dx = p.x - p2.x, dy = p.y - p2.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 125) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y);
+                            ctx.strokeStyle = isDark ? `rgba(147, 197, 253, ${(1 - dist / 125) * 0.22})` : `rgba(37, 99, 235, ${(1 - dist / 125) * 0.12})`;
+                            ctx.lineWidth = 0.9;
+                            ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(draw);
+            }
+            draw();
+        })();
+    </script>
+</body>
+</html>
