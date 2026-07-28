@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منظم جدول جامعة جازان</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗓️</text></svg>">
+    <title>منظم جدول</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2' ry='2'></rect><line x1='16' y1='2' x2='16' y2='6'></line><line x1='8' y1='2' x2='8' y2='6'></line><line x1='3' y1='10' x2='21' y2='10'></line><circle cx='12' cy='15' r='1.5' fill='%233b82f6' stroke='none'></circle></svg>">
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -586,6 +586,118 @@
             ]
         };
         const COLORS = PALETTES['default'];
+
+        const DeveloperMenu = ({ text }) => {
+            const [isOpen, setIsOpen] = React.useState(false);
+            const menuRef = React.useRef(null);
+
+            React.useEffect(() => {
+                const handleClickOutside = (event) => {
+                    if (menuRef.current && !menuRef.current.contains(event.target)) {
+                        setIsOpen(false);
+                    }
+                };
+                document.addEventListener("mousedown", handleClickOutside);
+                return () => document.removeEventListener("mousedown", handleClickOutside);
+            }, []);
+
+            return (
+                <div style={{ position: "relative", display: "inline-block" }} ref={menuRef}>
+                    <span 
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="dev-name" 
+                        style={{ 
+                            display: "inline-block", 
+                            fontWeight: "bold",
+                            cursor: "pointer",
+                            animation: "nameWave 3s ease-in-out infinite",
+                            color: "#3b82f6",
+                            padding: "4px 8px",
+                            borderRadius: "6px",
+                            transition: "background 0.2s"
+                        }}
+                    >
+                        {text} ▾
+                    </span>
+                    <style>{`
+                        @keyframes nameWave {
+                            0%, 100% { color: #3b82f6; text-shadow: 0 0 5px rgba(59, 130, 246, 0.2); }
+                            50% { color: #8b5cf6; text-shadow: 0 0 10px rgba(139, 92, 246, 0.4); }
+                        }
+                        .dev-name:hover { background: rgba(59, 130, 246, 0.1); }
+                        .dev-menu {
+                            position: absolute;
+                            bottom: calc(100% + 10px);
+                            left: 50%;
+                            transform: translateX(-50%) translateY(10px);
+                            background: var(--card-bg);
+                            border: 1px solid var(--border-color);
+                            border-radius: 12px;
+                            padding: 8px;
+                            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                            display: flex;
+                            flex-direction: column;
+                            gap: 5px;
+                            min-width: 190px;
+                            z-index: 9999;
+                            opacity: 0;
+                            visibility: hidden;
+                            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+                        }
+                        .dev-menu.open {
+                            opacity: 1;
+                            visibility: visible;
+                            transform: translateX(-50%) translateY(0);
+                        }
+                        .dev-menu-item {
+                            padding: 10px 14px;
+                            color: var(--text-main);
+                            text-decoration: none;
+                            border-radius: 8px;
+                            font-size: 13px;
+                            transition: all 0.2s;
+                            display: flex;
+                            align-items: center;
+                            justify-content: flex-start;
+                            font-weight: 600;
+                            white-space: nowrap;
+                        }
+                        .dev-menu-item:hover {
+                            background: var(--hover-bg);
+                            color: #3b82f6;
+                            transform: translateX(-3px);
+                        }
+                    `}</style>
+                    <div className={`dev-menu ${isOpen ? "open" : ""}`}>
+                        <a href={`https://mail.google.com/mail/?view=cm&fs=1&to=abdulazizmashnawi@gmail.com&su=${encodeURIComponent("تواصل بخصوص منظم الجداول")}&body=${encodeURIComponent("مرحباً عبدالعزيز،\n\nلدي اقتراح أو بلاغ بخصوص منظم الجداول:\n\n")}`} className="dev-menu-item" target="_blank" rel="noreferrer">
+                            <Icon name="mail" /> إرسال اقتراح أو إبلاغ
+                        </a>
+                        <a href="https://github.com/AbdulazizMashnawi-NET" className="dev-menu-item" target="_blank" rel="noreferrer">
+                            <Icon name="bot" /> قيت هب
+                        </a>
+                    </div>
+                </div>
+            );
+        };
+
+        const Icon = ({ name, size = 16, color = "currentColor", style = {} }) => {
+            const baseStyle = { marginLeft: "6px", verticalAlign: "middle", marginBottom: "3px", ...style };
+            const icons = {
+                settings: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={baseStyle}><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>,
+                trash: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={baseStyle}><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>,
+                bookmark: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={baseStyle}><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>,
+                image: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={baseStyle}><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>,
+                share: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={baseStyle}><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>,
+                palette: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={baseStyle}><circle cx="13.5" cy="6.5" r=".5"></circle><circle cx="17.5" cy="10.5" r=".5"></circle><circle cx="8.5" cy="7.5" r=".5"></circle><circle cx="6.5" cy="12.5" r=".5"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg>,
+                building: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={baseStyle}><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><path d="M9 22v-4h6v4"></path><path d="M8 6h.01"></path><path d="M16 6h.01"></path><path d="M12 6h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M16 10h.01"></path><path d="M16 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path></svg>,
+                bot: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={baseStyle}><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4"></path><line x1="8" y1="16" x2="8" y2="16"></line><line x1="16" y1="16" x2="16" y2="16"></line></svg>,
+                party: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={baseStyle}><path d="M5.8 11.3 2 22l10.7-3.79"></path><path d="M4 3h.01"></path><path d="M22 8h.01"></path><path d="M15 2h.01"></path><path d="M22 20h.01"></path><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12v0c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"></path><path d="m22 13-.82-.33c-.86-.39-1.53.38-1.53 1.33v.01c0 .68-.66 1.15-1.32.99l-.23-.06c-.72-.18-1.4.39-1.4 1.13v0c0 .91-.87 1.54-1.74 1.36L14 17"></path><path d="m11 19 3 3"></path><path d="m9 17 3 3"></path><path d="m14 11-3-3"></path><path d="m10.1 7.1 2.4-2.4"></path></svg>,
+                clock: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={baseStyle}><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>,
+                calendar: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={baseStyle}><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>,
+                mail: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={baseStyle}><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+            };
+            return icons[name] || null;
+        };
 
         function TimeGrid({ sections, courseColors, use12h, darkMode }) {
             const CELL_HEIGHT = 50;
@@ -1400,7 +1512,7 @@
                         {/* Header */}
                         <div className="no-print app-header">
                             <div className="brand">
-                                <div className="brand-mark">🗓️</div>
+                                <div className="brand-mark" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}><Icon name="calendar" size={26} color="white" style={{ margin: 0, marginBottom: 0, marginLeft: 0 }} /></div>
                                 <h1>منظم جدول</h1>
                             </div>
                             <p className="brand-subtitle">ابنِ جدولك الدراسي بأقل تعارضات وفي دقائق</p>
@@ -1410,7 +1522,7 @@
                                 <div className={`progress-step ${view === "result" || view === "coop_result" ? "active" : ""}`}><span className="progress-number">3</span>الجدول</div>
                             </div>
 
-                            <button className="btn-animate" onClick={() => setSavedPanelOpen(true)} style={{ position: "absolute", left: "20px", top: "15px", background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.45)", color: "white", borderRadius: "10px", padding: "7px 10px", fontSize: "12px", fontWeight: "bold", cursor: "pointer" }}>🔖 المحفوظات {savedSchedules.length ? `(${savedSchedules.length})` : ""}</button>
+                            <button className="btn-animate" onClick={() => setSavedPanelOpen(true)} style={{ position: "absolute", left: "20px", top: "15px", background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.45)", color: "white", borderRadius: "10px", padding: "7px 10px", fontSize: "12px", fontWeight: "bold", cursor: "pointer", display: "flex", alignItems: "center", gap: "5px" }}><Icon name="bookmark" style={{ margin: 0 }} /> المحفوظات {savedSchedules.length ? `(${savedSchedules.length})` : ""}</button>
 
                             {view === "upload" && (
                                 <button className="btn-animate" onClick={() => setHelpModalOpen(true)} style={{
@@ -1683,7 +1795,9 @@
                                                     }}
                                                     onMouseOver={e => e.target.style.background = "#ef4444"}
                                                     onMouseOut={e => e.target.style.background = "rgba(239, 68, 68, 0.8)"}
-                                                >تفريغ الطاولة 🗑️</button>
+                                                >
+                                                    تفريغ الطاولة <Icon name="trash" />
+                                                </button>
                                             </div>
                                         )}
                                         {selectedIds.map((id, index) => {
@@ -1794,15 +1908,15 @@
                                                                 onMouseOver={e => e.target.style.background = "#2563eb"}
                                                                 onMouseOut={e => e.target.style.background = "rgba(59, 130, 246, 0.9)"}
                                                             >
-                                                                ⚙️ الدكاترة
+                                                                <Icon name="settings" /> الدكاترة
                                                             </button>
                                                             <button 
                                                                 onClick={(e) => { e.stopPropagation(); toggleSelection(c); }} 
-                                                                style={{ width: "100%", padding: "6px", background: "rgba(239, 68, 68, 0.9)", color: "white", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "8px", fontWeight: "bold", cursor: "pointer", fontSize: "12px", transition: "0.2s" }}
+                                                                style={{ width: "100%", padding: "6px", background: "rgba(239, 68, 68, 0.9)", color: "white", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "8px", fontWeight: "bold", cursor: "pointer", fontSize: "12px", transition: "0.2s", display: "flex", alignItems: "center", justifyContent: "center" }}
                                                                 onMouseOver={e => e.target.style.background = "#dc2626"}
                                                                 onMouseOut={e => e.target.style.background = "rgba(239, 68, 68, 0.9)"}
                                                             >
-                                                                🗑️ إزالة
+                                                                <Icon name="trash" /> إزالة
                                                             </button>
                                                         </div>
                                                     </div>
@@ -1815,7 +1929,7 @@
 
                             {view === "coop_result" && (
                                 <div className="fade-in-up" style={{ textAlign: "center", padding: "80px", border: "2px dashed #3b82f6", borderRadius: "20px", background: "rgba(59, 130, 246, 0.1)" }}>
-                                    <div style={{ fontSize: "60px", marginBottom: "15px" }}>🏢</div>
+                                    <Icon name="building" size={60} color="#3b82f6" style={{ margin: "0 auto", display: "block", marginBottom: "15px" }} />
                                     <h2 style={{ color: "#3b82f6", margin: "0 0 10px 0" }}>مقرر ميداني</h2>
                                     <p style={{ color: "var(--text-muted)", fontSize: "16px" }}>التدريب التعاوني لا يمتلك جدولاً زمنياً. يرجى التواصل مع كليتك / مشرف التدريب للحصول على التفاصيل.</p>
                                     <button className="btn-animate" onClick={() => setView("select")} style={{ marginTop: "20px", background: "#3b82f6", color: "white", border: "none", padding: "12px 25px", borderRadius: "10px", cursor: "pointer", fontWeight: "bold" }}>العودة للمواد</button>
@@ -1830,9 +1944,9 @@
                                             
                                             {schedules.length > 0 && (
                                                 <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
-                                                    <button className="btn-animate" onClick={saveCurrentSchedule} style={{ background: "var(--card-bg)", color: "var(--text-main)", border: "1px solid var(--border-color)", padding: "10px 16px", borderRadius: "12px", cursor: "pointer", fontWeight: "bold", fontSize: "13px", boxShadow: "var(--shadow)" }}>🔖 حفظ</button>
-                                                    <button className="btn-animate" onClick={exportScheduleImage} style={{ background: "var(--card-bg)", color: "var(--text-main)", border: "1px solid var(--border-color)", padding: "10px 16px", borderRadius: "12px", cursor: "pointer", fontWeight: "bold", fontSize: "13px", boxShadow: "var(--shadow)" }}>🖼️ صورة</button>
-                                                    <button className="btn-animate" onClick={shareCurrentSchedule} style={{ background: "#2563eb", color: "#ffffff", border: "none", padding: "10px 18px", borderRadius: "12px", cursor: "pointer", fontWeight: "bold", fontSize: "13px", boxShadow: "0 4px 14px rgba(37,99,235,0.3)" }}>🔗 مشاركة</button>
+                                                    <button className="btn-animate" onClick={saveCurrentSchedule} style={{ background: "var(--card-bg)", color: "var(--text-main)", border: "1px solid var(--border-color)", padding: "10px 16px", borderRadius: "12px", cursor: "pointer", fontWeight: "bold", fontSize: "13px", boxShadow: "var(--shadow)" }}><Icon name="bookmark" /> حفظ</button>
+                                                    <button className="btn-animate" onClick={exportScheduleImage} style={{ background: "var(--card-bg)", color: "var(--text-main)", border: "1px solid var(--border-color)", padding: "10px 16px", borderRadius: "12px", cursor: "pointer", fontWeight: "bold", fontSize: "13px", boxShadow: "var(--shadow)" }}><Icon name="image" /> صورة</button>
+                                                    <button className="btn-animate" onClick={shareCurrentSchedule} style={{ background: "#2563eb", color: "#ffffff", border: "none", padding: "10px 18px", borderRadius: "12px", cursor: "pointer", fontWeight: "bold", fontSize: "13px", boxShadow: "0 4px 14px rgba(37,99,235,0.3)" }}><Icon name="share" /> مشاركة</button>
                                                 </div>
                                             )}
                                         </div>
@@ -1848,7 +1962,7 @@
                                                 </div>
 
                                                 <div style={{ display: "flex", alignItems: "center", gap: "10px", background: "var(--card-bg)", padding: "8px 15px", borderRadius: "12px", border: "1px solid var(--border-color)", boxShadow: "var(--shadow)" }}>
-                                                    <span style={{ fontSize: "13px", fontWeight: "bold", color: "var(--text-main)" }}>🎨 الألوان</span>
+                                                    <span style={{ fontSize: "13px", fontWeight: "bold", color: "var(--text-main)" }}><Icon name="palette" /> الألوان</span>
                                                     <select className="palette-select" value={colorPalette} onChange={e => setColorPalette(e.target.value)}>
                                                         <option value="default">أساسي</option>
                                                         <option value="pastel">باستيل هادئ</option>
@@ -1873,24 +1987,24 @@
                                                 const insights = analyzeSchedule(schedules[currentIdx]);
                                                 return (
                                                     <div className="smart-insights-box no-print">
-                                                        <div className="smart-insights-title">🤖 تحليل الجدول الذكي:</div>
+                                                        <div className="smart-insights-title"><Icon name="bot" size={18} color="#8b5cf6" /> تحليل الجدول الذكي:</div>
                                                         <div className="smart-badges">
                                                             {insights.daysOff > 0 ? (
-                                                                <div className="smart-badge badge-success">🎉 {insights.daysOff} أيام أوف!</div>
+                                                                <div className="smart-badge badge-success"><Icon name="party" /> {insights.daysOff} أيام أوف!</div>
                                                             ) : (
-                                                                <div className="smart-badge badge-warning">😔 لا يوجد أيام أوف</div>
+                                                                <div className="smart-badge badge-warning"><Icon name="alert" /> لا يوجد أيام أوف</div>
                                                             )}
                                                             {insights.longGaps > 0 && (
-                                                                <div className="smart-badge badge-danger">⚠️ {insights.longGaps} فترات انتظار طويلة (3+ ساعات)</div>
+                                                                <div className="smart-badge badge-danger"><Icon name="alert" /> {insights.longGaps} فترات انتظار طويلة (3+ ساعات)</div>
                                                             )}
                                                             {insights.heavyDays > 0 && (
-                                                                <div className="smart-badge badge-warning">🔥 {insights.heavyDays} أيام ضغط (4 محاضرات فأكثر)</div>
+                                                                <div className="smart-badge badge-warning"><Icon name="alert" /> {insights.heavyDays} أيام ضغط (4 محاضرات فأكثر)</div>
                                                             )}
                                                             <div className="smart-badge" style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', color: 'var(--text-main)' }}>
-                                                                ⏱️ {getWeeklyHours(schedules[currentIdx])} ساعة أسبوعية
+                                                                <Icon name="clock" /> {getWeeklyHours(schedules[currentIdx])} ساعة أسبوعية
                                                             </div>
                                                             <div className="smart-badge" style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)', color: 'var(--text-main)' }}>
-                                                                📚 {getAllSectionsForCopy(schedules[currentIdx]).length} مواد مختارة
+                                                                <Icon name="bookmark" /> {getAllSectionsForCopy(schedules[currentIdx]).length} مواد مختارة
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1994,8 +2108,14 @@
                             )}
                         </div>
                         
-                        <footer className="footer">
-                            تطوير وهندسة الأوامر: <span>عبدالعزيز مشنوي</span> | مدعوم بالذكاء الاصطناعي
+                        <footer className="footer" style={{ textAlign: "center", padding: "20px", display: "flex", flexDirection: "column", alignItems: "center", gap: "5px" }}>
+                            <div>
+                                تطوير:{' '}
+                                <DeveloperMenu text="عبدالعزيز مشنوي" />
+                            </div>
+                            <div style={{ fontSize: "12px", color: "var(--text-muted)", opacity: 0.8, fontWeight: "500" }}>
+                                الإصدار 1.0
+                            </div>
                         </footer>
                     </div>
                 </div>
