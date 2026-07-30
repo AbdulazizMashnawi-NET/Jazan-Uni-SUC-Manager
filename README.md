@@ -23,6 +23,24 @@
 
 ---
 
+## 🖼️ Screenshots (Desktop & Mobile)
+
+### Desktop (PC)
+| Dark Mode (B) | Light Mode (W) |
+|:---:|:---:|
+| ![PC-1B](Screenshots/PC-1B.png) | ![PC-1W](Screenshots/PC-1W.png) |
+| ![PC-2B](Screenshots/PC-2B.png) | ![PC-2W](Screenshots/PC-2W.png) |
+| ![PC-3B](Screenshots/PC-3B.png) | ![PC-3W](Screenshots/PC-3W.png) |
+
+### Mobile (Phone)
+| Dark Mode (B) | Light Mode (W) |
+|:---:|:---:|
+| <img src="Screenshots/Phone-1B.jpeg" width="300"> | <img src="Screenshots/Phone-1W.jpeg" width="300"> |
+| <img src="Screenshots/Phone-2B.jpeg" width="300"> | <img src="Screenshots/Phone-2W.jpeg" width="300"> |
+| <img src="Screenshots/Phone-3B.jpeg" width="300"> | <img src="Screenshots/Phone-3W.jpeg" width="300"> |
+
+---
+
 ## Table of Contents
 - [Key Features](#key-features)
 - [The "Baloot Deck" Experience](#the-baloot-deck-experience)
