@@ -582,6 +582,7 @@
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
 </head>
 <body>
     <canvas id="antigravity-canvas"></canvas>
@@ -1004,7 +1005,7 @@
                             {isError ? <Icon name="x-circle" size={56} color="var(--danger-text)" style={{ margin: 0 }} /> : (title.includes('نجاح') ? <Icon name="check-circle" size={56} color="#10b981" style={{ margin: 0 }} /> : <Icon name="alert-triangle" size={56} color="#eab308" style={{ margin: 0 }} />)}
                         </div>
                         <h2 style={{ margin: '0 0 10px 0', color: 'var(--text-main)', fontSize: '22px' }}>{title}</h2>
-                        {message && <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '15px', marginBottom: '20px', whiteSpace: 'pre-wrap' }}>{message}</p>}
+                        {message && <div style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '15px', marginBottom: '20px', whiteSpace: 'pre-wrap' }}>{message}</div>}
                         {children && <div style={{ marginBottom: '25px', textAlign: 'right' }}>{children}</div>}
                         {onConfirm ? (
                             <div style={{ display: "flex", gap: "10px" }}>
@@ -1566,15 +1567,20 @@
                     
                     const minifiedCourses = (courses || [])
                         .filter(c => c && c.id && usedCourseIds.has(c.id))
-                        .map(c => ({ id: c.id, name: c.name, credits: c.credits, types: {} }));
+                        .map(c => ({ i: c.id, n: c.name, c: c.credits }));
+
+                    const minifiedSections = currentSecs.map(s => ({
+                        i: s.id, ci: s.courseId, cn: s.courseName, t: s.type, st: s.status, inst: s.instructor,
+                        sl: s.slots.map(l => ({ d: l.days, s: l.start, e: l.end, r: l.room }))
+                    }));
 
                     const payload = {
-                        sections: currentSecs,
-                        courses: minifiedCourses
+                        s: minifiedSections,
+                        c: minifiedCourses
                     };
                     const jsonStr = JSON.stringify(payload);
-                    const encoded = encodeURIComponent(btoa(unescape(encodeURIComponent(jsonStr))));
-                    const shareUrl = `${window.location.origin}${window.location.pathname}#share=${encoded}`;
+                    const compressed = LZString.compressToEncodedURIComponent(jsonStr);
+                    const shareUrl = `${window.location.origin}${window.location.pathname}#s=${compressed}`;
                     
                     const handleSuccess = () => {
                         showToast("تم نسخ رابط المشاركة 🔗");
@@ -1606,10 +1612,26 @@
             useEffect(() => {
                 try {
                     const hash = window.location.hash;
-                    if (hash.includes('#share=')) {
-                        const raw = hash.split('#share=')[1];
-                        const jsonStr = decodeURIComponent(escape(atob(decodeURIComponent(raw))));
-                        const data = JSON.parse(jsonStr);
+                    if (hash.includes('#share=') || hash.includes('#s=')) {
+                        let data;
+                        if (hash.includes('#share=')) {
+                            const raw = hash.split('#share=')[1];
+                            const jsonStr = decodeURIComponent(escape(atob(decodeURIComponent(raw))));
+                            data = JSON.parse(jsonStr);
+                        } else {
+                            const raw = hash.split('#s=')[1];
+                            const jsonStr = LZString.decompressFromEncodedURIComponent(raw);
+                            const parsed = JSON.parse(jsonStr);
+                            
+                            data = {
+                                courses: (parsed.c || []).map(c => ({ id: c.i, name: c.n, credits: c.c, types: {} })),
+                                sections: (parsed.s || []).map(s => ({
+                                    id: s.i, courseId: s.ci, courseName: s.cn, type: s.t, status: s.st, instructor: s.inst,
+                                    slots: (s.sl || []).map(l => ({ days: l.d, start: l.s, end: l.e, room: l.r }))
+                                }))
+                            };
+                        }
+
                         if (data && data.sections) {
                             setCourses(data.courses || []);
                             setSelectedIds((data.courses || []).map(course => course.id));
@@ -1617,12 +1639,26 @@
                             setCurrentIdx(0);
                             setView("result");
                             setIsSharedView(true);
+                            
+                            const warningMessage = (
+                                <div style={{ background: "rgba(239, 68, 68, 0.15)", border: "2px solid #ef4444", borderRadius: "12px", padding: "16px", color: "var(--text-main)", fontSize: "14px", textAlign: "right", marginTop: "15px", lineHeight: "1.8" }}>
+                                    <div style={{ color: "#ef4444", fontWeight: "bold", display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px", fontSize: "16px" }}>
+                                        <Icon name="alert-triangle" size={20} style={{ margin: 0 }} /> تحذير هام جداً
+                                    </div>
+                                    أنت تقوم الآن بعرض جدول تمت مشاركته معك من قِبل شخص آخر. هذه المنصة هي أداة مساعدة ومستقلة تماماً ولا ترتبط بأي صفة رسمية بجامعة جازان أو أنظمتها الأكاديمية.
+                                    <br/><br/>
+                                    <b>إن عرضك لهذا الجدول أو حفظه هنا لا يعني بأي حال من الأحوال تسجيلك الفعلي في المقررات أو ضمان مقعد لك في الشعبة.</b>
+                                    <br/><br/>
+                                    يجب عليك إتمام عملية التسجيل بنفسك يدوياً في بوابة النظام الأكاديمي متى ما تم إتاحة ذلك من قِبل الجامعة.
+                                </div>
+                            );
+
                             showModal(
                                 "إقرار وإخلاء مسؤولية",
-                                "أنت تقوم الآن بعرض جدول تمت مشاركته معك من قِبل شخص آخر.\n\nهذه المنصة هي أداة مساعدة ومستقلة تماماً، ولا ترتبط بأي صفة رسمية بجامعة جازان أو أنظمتها الأكاديمية. إن عرضك لهذا الجدول أو حفظه هنا لا يعني بأي حال من الأحوال تسجيلك الفعلي في المقررات أو ضمان مقعد لك في الشعبة.\n\nيجب عليك إتمام عملية التسجيل بنفسك يدوياً في خانة تسجيل المقررات متى ما تم إتاحة ذلك من قِبل الجامعة بشكل رسمي.\n\nنقرَك على (فهمت) يعني موافقتك التامة على هذا الشيء.",
+                                warningMessage,
                                 false,
                                 null,
-                                "فهمت"
+                                "فهمت وموافق"
                             );
                             showToast("تم تحميل الجدول المشارَك بنجاح");
                         }
