@@ -1,5 +1,4 @@
 <div align="center">
-  <img src="https://img.icons8.com/?size=100&id=11306&format=png&color=000000" alt="Calendar Icon" width="80" />
   <h1>Jazan Uni SUC Manager (JUSM)</h1>
   
   <p><b>A smart, ultra-fast, and highly interactive web application designed to help Jazan University students build, manage, and share their academic schedules with zero conflicts and maximum days off.</b></p>
@@ -14,6 +13,10 @@
 
   <i>Developed by: Abdulaziz Mashnawi</i>
 </div>
+
+> **DISCLAIMER:** This tool is an independent assistant designed solely to help you organize and visualize your potential schedules. **It does NOT register you for classes, nor does it guarantee you a seat in any section.** You must still manually register for your chosen classes through the official university system.
+> 
+> **Official University Website (Edugate):** [https://edugate.jazanu.edu.sa/jazan/ui/home.faces](https://edugate.jazanu.edu.sa/jazan/ui/home.faces)
 
 ---
 
