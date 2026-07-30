@@ -133,7 +133,7 @@
         .time-cell-badge { background: var(--card-bg); border: 1px solid var(--border-color); padding: 3px 8px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); color: var(--text-main); white-space: nowrap; }
 
         .theme-toggle-btn {
-            position: fixed; bottom: 30px; right: 30px; z-index: 1000; width: 55px; height: 55px;
+            position: fixed !important; bottom: 30px !important; right: 30px !important; z-index: 1000; width: 55px; height: 55px;
             border-radius: 50%; border: 2px solid var(--border-color); background: var(--card-bg);
             display: flex; justify-content: center; align-items: center; font-size: 26px;
             cursor: pointer; box-shadow: var(--shadow); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -450,7 +450,7 @@
             .progress-step { padding: 5px 8px; font-size: 11px; }
             .app-content { padding: 20px 16px; }
             .upload-zone { padding: 46px 18px; }
-            .theme-toggle-btn { width: 46px; height: 46px; font-size: 21px; right: 16px; bottom: 16px; }
+            .theme-toggle-btn { width: 46px; height: 46px; font-size: 21px; right: 16px !important; bottom: 16px !important; }
         }
 
         .schedule-insight { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 20px; padding: 20px 24px; border: 1px solid var(--border-color); border-radius: 18px; background: var(--hover-bg); box-shadow: var(--shadow); }
@@ -1015,6 +1015,7 @@
             const [schedules, setSchedules] = useState([]);
             const [currentIdx, setCurrentIdx] = useState(0);
             const [view, setView] = useState("upload");
+            const [isSharedView, setIsSharedView] = useState(false);
             const [hideClosed, setHideClosed] = useState(false);
             const [isSummerTerm, setIsSummerTerm] = useState(false);
             const [use12hFormat, setUse12hFormat] = useState(true);
@@ -1596,6 +1597,7 @@
                             setSchedules([data.sections]);
                             setCurrentIdx(0);
                             setView("result");
+                            setIsSharedView(true);
                             showToast("تم تحميل الجدول المشارَك بنجاح ✨");
                         }
                     }
@@ -2189,8 +2191,8 @@
                                             {schedules.length > 0 && (
                                                 <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
                                                     <div style={{ display: "flex", alignItems: "center", background: "var(--hover-bg)", borderRadius: "12px", padding: "4px", border: "1px solid var(--border-color)", boxShadow: "var(--shadow)", height: "42px", boxSizing: "border-box" }}>
-                                                        <button className="btn-animate" onClick={() => setUse12hFormat(true)} data-tooltip="عرض الوقت بنظام 12 ساعة (صباحاً/مساءً)" style={{ background: use12hFormat ? "#3b82f6" : "transparent", color: use12hFormat ? "#ffffff" : "var(--text-muted)", border: "none", borderRadius: "8px", padding: "6px 16px", fontWeight: "bold", fontSize: "13px", cursor: "pointer", height: "100%" }}>12h</button>
-                                                        <button className="btn-animate" onClick={() => setUse12hFormat(false)} data-tooltip="عرض الوقت بنظام 24 ساعة" style={{ background: !use12hFormat ? "#3b82f6" : "transparent", color: !use12hFormat ? "#ffffff" : "var(--text-muted)", border: "none", borderRadius: "8px", padding: "6px 16px", fontWeight: "bold", fontSize: "13px", cursor: "pointer", height: "100%" }}>24h</button>
+                                                        <button className="btn-animate" onClick={() => setUse12hFormat(false)} data-tooltip="عرض الوقت بنظام 24 ساعة" style={{ background: !use12hFormat ? "#3b82f6" : "transparent", color: !use12hFormat ? "#ffffff" : "var(--text-muted)", border: "none", borderRadius: "8px", padding: "6px 16px", fontWeight: "bold", fontSize: "13px", cursor: "pointer", height: "100%", transition: "all 0.2s ease" }}>24h</button>
+                                                        <button className="btn-animate" onClick={() => setUse12hFormat(true)} data-tooltip="عرض الوقت بنظام 12 ساعة (صباحاً/مساءً)" style={{ background: use12hFormat ? "#3b82f6" : "transparent", color: use12hFormat ? "#ffffff" : "var(--text-muted)", border: "none", borderRadius: "8px", padding: "6px 16px", fontWeight: "bold", fontSize: "13px", cursor: "pointer", height: "100%", transition: "all 0.2s ease" }}>12h</button>
                                                     </div>
                                                     <button className="btn-animate" onClick={saveCurrentSchedule} data-tooltip="حفظ هذا الجدول للرجوع إليه لاحقاً" style={{ background: "var(--card-bg)", color: "var(--text-main)", border: "1px solid var(--border-color)", padding: "10px 14px", borderRadius: "12px", cursor: "pointer", fontWeight: "bold", fontSize: "13px", boxShadow: "var(--shadow)", height: "42px", boxSizing: "border-box" }}><Icon name="bookmark" /> حفظ</button>
                                                     <button className="btn-animate" onClick={exportScheduleImage} data-tooltip="تحميل الجدول كصورة عالية الدقة" style={{ background: "var(--card-bg)", color: "var(--text-main)", border: "1px solid var(--border-color)", padding: "10px 14px", borderRadius: "12px", cursor: "pointer", fontWeight: "bold", fontSize: "13px", boxShadow: "var(--shadow)", height: "42px", boxSizing: "border-box" }}><Icon name="image" /> صورة</button>
@@ -2283,6 +2285,12 @@
                                             </aside>
 
                                             <main className="schedule-main">
+                                                {isSharedView && (
+                                                    <div style={{ background: "rgba(239, 68, 68, 0.1)", border: "1px solid rgba(239, 68, 68, 0.3)", borderRadius: "12px", padding: "12px 16px", color: "var(--text-main)", fontSize: "13px", marginBottom: "20px", textAlign: "right", boxShadow: "var(--shadow)" }}>
+                                                        <b style={{ color: "#ef4444", display: "block", marginBottom: "4px" }}>⚠️ تنبيه هام:</b>
+                                                        هذا الجدول تمت مشاركته معك. هذه المنصة مستقلة ومطورة بمبادرة طلابية، ولا يغني استخدامها عن عملية التسجيل الفعلي في بوابة الجامعة الرسمية.
+                                                    </div>
+                                                )}
                                                 <div className="schedule-grid-frame">
                                                     <TimeGrid sections={schedules[currentIdx]} courseColors={courseColors} use12h={use12hFormat} darkMode={darkMode} />
                                                 </div>
