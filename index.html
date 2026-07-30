@@ -1563,7 +1563,6 @@
                 try {
                     const currentSecs = schedules[currentIdx];
                     const usedCourseIds = new Set(currentSecs.map(s => s.courseId));
-                    const usedSectionIds = new Set(currentSecs.map(s => s.id));
                     
                     const minifiedCourses = (courses || [])
                         .filter(c => c && c.id && usedCourseIds.has(c.id))
@@ -1582,28 +1581,47 @@
                     const compressed = LZString.compressToEncodedURIComponent(jsonStr);
                     const shareUrl = `${window.location.origin}${window.location.pathname}#s=${compressed}`;
                     
-                    const handleSuccess = () => {
-                        showToast("تم نسخ رابط المشاركة 🔗");
-                        showModal("تم نسخ رابط المشاركة 🔗", "تم نسخ رابط تفاصيل الجدول إلى الحافظة بنجاح!\nيمكنك الآن إرساله لزملائك ليفتحوا نفس الجدول فوراً عند ضغط الرابط.", false);
+                    const copyToClipboard = (text) => {
+                        const handleSuccess = () => {
+                            showToast("تم نسخ رابط المشاركة 🔗");
+                            showModal("تم نسخ رابط المشاركة 🔗", "تم نسخ الرابط المختصر للجدول بنجاح!\nيمكنك الآن إرساله لزملائك ليفتحوا الجدول فوراً.", false);
+                        };
+                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                            navigator.clipboard.writeText(text).then(handleSuccess).catch(err => {
+                                showModal("تعذر المشاركة", "حدث خطأ أثناء النسخ: " + err.message);
+                            });
+                        } else {
+                            const textArea = document.createElement("textarea");
+                            textArea.value = text;
+                            document.body.appendChild(textArea);
+                            textArea.select();
+                            try {
+                                document.execCommand('copy');
+                                handleSuccess();
+                            } catch (err) {
+                                showModal("تعذر المشاركة", "متصفحك لا يدعم النسخ التلقائي.");
+                            }
+                            document.body.removeChild(textArea);
+                        }
                     };
 
-                    if (navigator.clipboard && navigator.clipboard.writeText) {
-                        navigator.clipboard.writeText(shareUrl).then(handleSuccess).catch(err => {
-                            showModal("تعذر المشاركة", "حدث خطأ أثناء النسخ: " + err.message);
-                        });
-                    } else {
-                        const textArea = document.createElement("textarea");
-                        textArea.value = shareUrl;
-                        document.body.appendChild(textArea);
-                        textArea.select();
-                        try {
-                            document.execCommand('copy');
-                            handleSuccess();
-                        } catch (err) {
-                            showModal("تعذر المشاركة", "متصفحك لا يدعم النسخ التلقائي.");
+                    showToast("جاري إنشاء رابط مختصر...");
+                    const callbackName = 'isgd_callback_' + Math.round(100000 * Math.random());
+                    window[callbackName] = function(data) {
+                        delete window[callbackName];
+                        if (data && data.shorturl) {
+                            copyToClipboard(data.shorturl);
+                        } else {
+                            copyToClipboard(shareUrl); // Fallback to long URL
                         }
-                        document.body.removeChild(textArea);
-                    }
+                    };
+                    const script = document.createElement('script');
+                    script.src = `https://is.gd/create.php?format=json&url=${encodeURIComponent(shareUrl)}&callback=${callbackName}`;
+                    script.onerror = () => {
+                        delete window[callbackName];
+                        copyToClipboard(shareUrl); // Fallback if API is blocked or offline
+                    };
+                    document.body.appendChild(script);
                 } catch (e) {
                     showModal("تعذر المشاركة", "خطأ داخلي: " + e.message);
                 }
@@ -1639,6 +1657,7 @@
                             setCurrentIdx(0);
                             setView("result");
                             setIsSharedView(true);
+                            window.history.replaceState(null, '', window.location.pathname);
                             
                             const warningMessage = (
                                 <div style={{ background: "rgba(239, 68, 68, 0.15)", border: "2px solid #ef4444", borderRadius: "12px", padding: "16px", color: "var(--text-main)", fontSize: "14px", textAlign: "right", marginTop: "15px", lineHeight: "1.8" }}>
