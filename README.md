@@ -2,6 +2,7 @@
   <h1>Jazan Uni SUC Manager (JUSM)</h1>
   
   <p><b>A smart, ultra-fast, and highly interactive web application designed to help Jazan University students build, manage, and share their academic schedules with zero conflicts and maximum days off.</b></p>
+  <p><b>Whatever your major or college is, this tool will seamlessly work for you! (مهما كان تخصصك، الأداة ستعمل معك بكفاءة)</b></p>
 
   <!-- Badges -->
   <p>
@@ -14,7 +15,9 @@
   <i>Developed by: Abdulaziz Mashnawi</i>
 </div>
 
-> **DISCLAIMER:** This tool is an independent assistant designed solely to help you organize and visualize your potential schedules. **It does NOT register you for classes, nor does it guarantee you a seat in any section.** You must still manually register for your chosen classes through the official university system.
+> **DISCLAIMER & TERMS OF USE:** This platform is a strictly independent, student-developed utility and is **NOT affiliated with, endorsed by, or connected to Jazan University or its official academic systems in any capacity.** Its sole purpose is to assist in organizing and visualizing potential schedules. It does NOT serve as an official registration tool, nor does it guarantee you a seat in any course section. **Therefore, you must manually complete your course registration through the official university portal whenever registration is officially opened.**
+> 
+> *By clicking the "Upload File" button within the application, you explicitly acknowledge and agree to the terms stated above.*
 > 
 > **Official University Website (Edugate):** [https://edugate.jazanu.edu.sa/jazan/ui/home.faces](https://edugate.jazanu.edu.sa/jazan/ui/home.faces)
 
