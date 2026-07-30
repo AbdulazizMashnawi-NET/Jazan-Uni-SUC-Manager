@@ -974,7 +974,7 @@
             );
         }
 
-        function CustomModal({ isOpen, title, message, children, isError, onClose, onConfirm }) {
+        function CustomModal({ isOpen, title, message, children, isError, onClose, onConfirm, closeText = "حسناً" }) {
             if (!isOpen) return null;
             return (
                 <div style={{
@@ -1005,7 +1005,7 @@
                                 background: isError ? '#ef4444' : '#3b82f6', color: 'white', border: 'none',
                                 padding: '12px 30px', borderRadius: '10px', cursor: 'pointer',
                                 fontWeight: 'bold', fontSize: '15px', width: '100%'
-                            }}>إغلاق</button>
+                            }}> {closeText} </button>
                         )}
                     </div>
                 </div>
@@ -1034,7 +1034,7 @@
             });
             const [conflictErrors, setConflictErrors] = useState({ type: null, data: [] });
             const [realTimeConflicts, setRealTimeConflicts] = useState({});
-            const [modal, setModal] = useState({ isOpen: false, title: "", message: "", isError: false, onConfirm: null });
+            const [modal, setModal] = useState({ isOpen: false, title: "", message: "", isError: false, onConfirm: null, closeText: "حسناً" });
             const [helpModalOpen, setHelpModalOpen] = useState(false);
             const [savedPanelOpen, setSavedPanelOpen] = useState(false);
             const [filterPhase, setFilterPhase] = useState("none");
@@ -1087,8 +1087,8 @@
                 try { localStorage.setItem('savedSchedules', JSON.stringify(savedSchedules)); } catch {}
             }, [savedSchedules]);
 
-            const showModal = (title, message, isError = true, onConfirm = null) => setModal({ isOpen: true, title, message, isError, onConfirm });
-            const closeModal = () => setModal({ ...modal, isOpen: false, onConfirm: null });
+            const showModal = (title, message, isError = true, onConfirm = null, closeText = "حسناً") => setModal({ isOpen: true, title, message, isError, onConfirm, closeText });
+            const closeModal = () => setModal({ ...modal, isOpen: false, onConfirm: null, closeText: "حسناً" });
 
             const totalCredits = selectedIds.reduce((sum, id) => {
                 const course = courses.find(c => c.id === id);
@@ -1606,6 +1606,13 @@
                             setCurrentIdx(0);
                             setView("result");
                             setIsSharedView(true);
+                            showModal(
+                                "إقرار وإخلاء مسؤولية",
+                                "أنت تقوم الآن بعرض جدول تمت مشاركته معك من قِبل شخص آخر.\n\nهذه المنصة هي أداة مساعدة ومستقلة تماماً، ولا ترتبط بأي صفة رسمية بجامعة جازان أو أنظمتها الأكاديمية. إن عرضك لهذا الجدول أو حفظه هنا لا يعني بأي حال من الأحوال تسجيلك الفعلي في المقررات أو ضمان مقعد لك في الشعبة.\n\nيجب عليك إتمام عملية التسجيل بنفسك يدوياً في خانة تسجيل المقررات متى ما تم إتاحة ذلك من قِبل الجامعة بشكل رسمي.\n\nنقرَك على (فهمت) يعني موافقتك التامة على هذا الشيء.",
+                                false,
+                                null,
+                                "فهمت"
+                            );
                             showToast("تم تحميل الجدول المشارَك بنجاح ✨");
                         }
                     }
@@ -1662,7 +1669,7 @@
                         {darkMode ? '☀️' : '🌙'}
                     </button>
 
-                    <CustomModal isOpen={modal.isOpen} title={modal.title} message={modal.message} isError={modal.isError} onClose={closeModal} onConfirm={modal.onConfirm} />
+                    <CustomModal isOpen={modal.isOpen} title={modal.title} message={modal.message} isError={modal.isError} onClose={closeModal} onConfirm={modal.onConfirm} closeText={modal.closeText} />
 
                     <CustomModal isOpen={helpModalOpen} title="طريقة استخراج الجدول 📋" isError={false} onClose={() => setHelpModalOpen(false)}>
                         <ul className="help-list">
