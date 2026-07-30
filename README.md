@@ -1,6 +1,6 @@
 <div align="center">
   <img src="https://img.icons8.com/?size=100&id=11306&format=png&color=000000" alt="Calendar Icon" width="80" />
-  <h1>🎓 Jazan Uni SUC Manager (JUSM)</h1>
+  <h1>Jazan Uni SUC Manager (JUSM)</h1>
   
   <p><b>A smart, ultra-fast, and highly interactive web application designed to help Jazan University students build, manage, and share their academic schedules with zero conflicts and maximum days off.</b></p>
 
@@ -17,41 +17,41 @@
 
 ---
 
-## 📑 Table of Contents
-- [✨ Key Features](#-key-features)
-- [🎮 The "Baloot Deck" Experience](#-the-baloot-deck-experience)
-- [🚀 How to Use](#-how-to-use)
-- [🛠️ Tech Stack & Architecture](#️-tech-stack--architecture)
-- [🔒 Privacy & Security](#-privacy--security)
-- [🤝 Contributing](#-contributing)
+## Table of Contents
+- [Key Features](#key-features)
+- [The "Baloot Deck" Experience](#the-baloot-deck-experience)
+- [How to Use](#how-to-use)
+- [Tech Stack & Architecture](#tech-stack--architecture)
+- [Privacy & Security](#privacy--security)
+- [Contributing](#contributing)
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-* 🚀 **Smart Automated Generation:** Automatically calculates and generates all possible schedule combinations, ensuring zero time conflicts.
-* 📄 **Instant Edugate Parsing:** Directly parses `HTML` files saved from the "Edugate" (Academia) system to extract courses, sections, and instructors in real-time.
-* 🌴 **Maximum Days Off:** A smart algorithm prioritizes schedules that maximize your weekly days off, reducing daily commutes.
-* 🔗 **"Nuclear" Link Sharing:** Share your perfect schedule with friends instantly! We built a custom minification algorithm that compresses schedule data into extremely short, shareable URLs.
-* 🌙 **Dynamic Theming (Dark/Light):** Seamless Dark Mode support with gorgeous Glassmorphism UI, smooth transitions, and saved preferences.
-* 🖼️ **High-Res Exporting:** Export your final schedule as a high-quality `PNG` image with a single click, ready to be set as your wallpaper or shared on WhatsApp.
-* 🔖 **Advanced Bookmarking:** Save multiple potential schedules directly to your browser's LocalStorage to compare them later.
-* 👨‍🏫 **Advanced Filtering:** Filter classes based on your favorite instructors and preferred days.
+* **Smart Automated Generation:** Automatically calculates and generates all possible schedule combinations, ensuring zero time conflicts.
+* **Instant Edugate Parsing:** Directly parses `HTML` files saved from the "Edugate" (Academia) system to extract courses, sections, and instructors in real-time.
+* **Maximum Days Off:** A smart algorithm prioritizes schedules that maximize your weekly days off, reducing daily commutes.
+* **"Nuclear" Link Sharing:** Share your perfect schedule with friends instantly! We built a custom minification algorithm that compresses schedule data into extremely short, shareable URLs.
+* **Dynamic Theming (Dark/Light):** Seamless Dark Mode support with gorgeous Glassmorphism UI, smooth transitions, and saved preferences.
+* **High-Res Exporting:** Export your final schedule as a high-quality `PNG` image with a single click, ready to be set as your wallpaper or shared on WhatsApp.
+* **Advanced Bookmarking:** Save multiple potential schedules directly to your browser's LocalStorage to compare them later.
+* **Advanced Filtering:** Filter classes based on your favorite instructors and preferred days.
 
 ---
 
-## 🎮 The "Baloot Deck" Experience (Gamified UI)
+## The "Baloot Deck" Experience (Gamified UI)
 
 We turned the boring task of selecting courses into an interactive, gamified experience inspired by playing cards:
 
-- **3D Card Flips:** Click on any selected course card to watch it flip 180° in 3D, revealing advanced instructor settings.
+- **3D Card Flips:** Click on any selected course card to watch it flip 180 degrees in 3D, revealing advanced instructor settings.
 - **Red Alert Conflict Glow:** If two courses you select clash in timing, their cards will immediately pulse with a red warning glow.
 - **Cinematic Deck Clearing:** Clicking "Clear Deck" triggers a 3-stage animation where cards gather, shake violently, and scatter explosively across your screen!
 - **Glassmorphism Stats Bar:** Hovering over your deck reveals a beautiful frosted-glass stats bar tracking your total credits.
 
 ---
 
-## 🚀 How to Use
+## How to Use
 
 <details open>
 <summary><b>Click here for step-by-step instructions</b></summary>
@@ -65,11 +65,11 @@ We turned the boring task of selecting courses into an interactive, gamified exp
 7. Review the conflict-free options, save your favorite, and export it as an image!
 </details>
 
-> 💡 **Pro Tip:** Use the (⚙️ Instructors Settings) by clicking on any card in your deck to narrow down choices and get a schedule taught exclusively by your favorite professors.
+> **Pro Tip:** Use the (Instructors Settings) by clicking on any card in your deck to narrow down choices and get a schedule taught exclusively by your favorite professors.
 
 ---
 
-## 🛠️ Tech Stack & Architecture
+## Tech Stack & Architecture
 
 This project is built as a highly performant, dependency-light Single Page Application (SPA):
 
@@ -81,18 +81,18 @@ This project is built as a highly performant, dependency-light Single Page Appli
 
 ---
 
-## 🔒 Privacy & Security
+## Privacy & Security
 
 **Your data is 100% secure and never leaves your device.**
 The application operates on an **Offline-First** and **Client-Side Rendering** architecture. All HTML file processing, conflict calculations, and schedule generation happen entirely within your local browser. **There are no backend servers**, meaning your academic data is completely private.
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Have ideas to make schedule planning even less stressful? Encountered a bug? Feel free to open an `Issue` or submit a `Pull Request`. All contributions are welcome!
 
 <br/>
 <div align="center">
-  <p>Made with 💙 for the students of Jazan University.</p>
+  <p>Made with passion for the students of Jazan University.</p>
 </div>
