@@ -47,7 +47,7 @@
 - [How to Use](#how-to-use)
 - [Tech Stack & Architecture](#tech-stack--architecture)
 - [Privacy & Security](#privacy--security)
-- [Contributing](#contributing)
+- [Contact](#contact)
 
 ---
 
@@ -112,9 +112,10 @@ The application operates on an **Offline-First** and **Client-Side Rendering** a
 
 ---
 
-## Contributing
+## Contact
 
-Have ideas to make schedule planning even less stressful? Encountered a bug? Feel free to open an `Issue` or submit a `Pull Request`. All contributions are welcome!
+If you have any ideas to improve the platform, encountered a bug, or just want to reach out, feel free to contact me directly at:
+**Email:** [abdulazizmashnawi@gmail.com](mailto:abdulazizmashnawi@gmail.com)
 
 <br/>
 <div align="center">
