@@ -1002,7 +1002,7 @@
                         animation: 'popIn 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
                     }}>
                         <div style={{ marginBottom: '15px', display: 'flex', justifyContent: 'center' }}>
-                            {isError ? <Icon name="x-circle" size={56} color="var(--danger-text)" style={{ margin: 0 }} /> : (title.includes('نجاح') ? <Icon name="check-circle" size={56} color="#10b981" style={{ margin: 0 }} /> : <Icon name="alert-triangle" size={56} color="#eab308" style={{ margin: 0 }} />)}
+                            {isError ? <Icon name="x-circle" size={56} color="var(--danger-text)" style={{ margin: 0 }} /> : (title && title.includes('نجاح') ? <Icon name="check-circle" size={56} color="#10b981" style={{ margin: 0 }} /> : <Icon name="alert-triangle" size={56} color="#eab308" style={{ margin: 0 }} />)}
                         </div>
                         <h2 style={{ margin: '0 0 10px 0', color: 'var(--text-main)', fontSize: '22px' }}>{title}</h2>
                         {message && <div style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '15px', marginBottom: '20px', whiteSpace: 'pre-wrap' }}>{message}</div>}
@@ -1778,16 +1778,28 @@
                         </div>
                     </CustomModal>
 
-                    <CustomModal isOpen={helpModalOpen} title="طريقة استخراج الجدول" isError={false} onClose={() => setHelpModalOpen(false)}>
-                        <ul className="help-list">
-                            <li><b>1.</b> سجل دخولك في بوابة النظام الأكاديمي (جامعة جازان - المقررات المطروحة وفق الخطة).</li>
-                            <li><b>2.</b> اضغط بزر الفأرة الأيمن في أي مكان بالشاشة، واختر <b>"حفظ كـ" (Save As)</b>.</li>
-                            <li><b>3.</b> في خيار "حفظ كنوع"، تأكد من اختيار <b>(Webpage, HTML Only)</b> واحفظ الملف.</li>
-                            <li><b>4.</b> ارجع لهذه الأداة وارفع الملف.</li>
-                        </ul>
+                    <CustomModal isOpen={helpModalOpen} title="خيارات ومساعدة" isError={false} onClose={() => setHelpModalOpen(false)}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+                            <div>
+                                <h4 style={{ margin: "0 0 10px", color: "var(--text-main)" }}>مستخدم آيفون أو آيباد؟</h4>
+                                <button className="btn-animate" onClick={() => { setIosModal({ isOpen: true, isAuto: false }); setHelpModalOpen(false); }} style={{ background: "rgba(59,130,246,0.15)", border: "1px solid rgba(59,130,246,0.3)", color: "#3b82f6", borderRadius: "10px", padding: "10px 15px", width: "100%", fontSize: "14px", fontWeight: "bold", cursor: "pointer" }}>كيفية الاستخراج للأجهزة الذكية (اختصار)</button>
+                            </div>
+
+                            <hr style={{ border: "none", borderTop: "1px solid var(--border-color)", margin: 0 }} />
+
+                            <div>
+                                <h4 style={{ margin: "0 0 10px", color: "var(--text-main)" }}>طريقة استخراج الجدول من الكمبيوتر</h4>
+                                <ul className="help-list" style={{ margin: 0 }}>
+                                    <li><b>1.</b> سجل دخولك في بوابة النظام الأكاديمي (جامعة جازان - المقررات المطروحة وفق الخطة).</li>
+                                    <li><b>2.</b> اضغط بزر الفأرة الأيمن في أي مكان بالشاشة، واختر <b>"حفظ كـ" (Save As)</b>.</li>
+                                    <li><b>3.</b> في خيار "حفظ كنوع"، تأكد من اختيار <b>(Webpage, HTML Only)</b> واحفظ الملف.</li>
+                                    <li><b>4.</b> ارجع لهذه الأداة وارفع الملف.</li>
+                                </ul>
+                            </div>
+                        </div>
                     </CustomModal>
 
-                    <CustomModal isOpen={savedPanelOpen} data-tooltip="🔖 الجداول المحفوظة" isError={false} onClose={() => setSavedPanelOpen(false)}>
+                    <CustomModal isOpen={savedPanelOpen} title="🔖 الجداول المحفوظة" isError={false} onClose={() => setSavedPanelOpen(false)}>
                         {savedSchedules.length ? (
                             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                                 {savedSchedules.map(saved => (
@@ -1857,17 +1869,12 @@
                             <button className="btn-animate" onClick={() => setSavedPanelOpen(true)} data-tooltip="عرض الجداول التي قمت بحفظها مسبقاً" style={{ position: "absolute", left: "20px", top: "15px", background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.45)", color: "white", borderRadius: "10px", padding: "7px 10px", fontSize: "12px", fontWeight: "bold", cursor: "pointer", display: "flex", alignItems: "center", gap: "5px" }}><Icon name="bookmark" style={{ margin: 0 }} /> المحفوظات {savedSchedules.length ? `(${savedSchedules.length})` : ""}</button>
 
                             {view === "upload" && (
-                                <div style={{ position: 'absolute', right: '20px', top: '15px', display: 'flex', gap: '8px', alignItems: 'center' }}>
-                                    <button className="btn-animate" onClick={() => setIosModal({ isOpen: true, isAuto: false })} style={{
-                                        background: 'rgba(255,255,255,0.15)', border: '2px solid rgba(255,255,255,0.5)', color: 'white', borderRadius: '16px',
-                                        height: '32px', padding: '0 15px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box'
-                                    }}>آيفون/آيباد؟</button>
-                                    <button className="btn-animate" onClick={() => setHelpModalOpen(true)} style={{
-                                        background: 'transparent', border: '2px solid rgba(255,255,255,0.5)', color: 'white', borderRadius: '50%',
-                                        width: '32px', height: '32px', fontSize: '18px', fontWeight: 'bold', cursor: 'pointer',
-                                        display: 'flex', justifyContent: 'center', alignItems: 'center', boxSizing: 'border-box'
-                                    }}>?</button>
-                                </div>
+                                <button className="btn-animate" onClick={() => setHelpModalOpen(true)} style={{
+                                    position: 'absolute', right: '20px', top: '15px',
+                                    background: 'transparent', border: '2px solid rgba(255,255,255,0.5)', color: 'white', borderRadius: '50%',
+                                    width: '32px', height: '32px', fontSize: '18px', fontWeight: 'bold', cursor: 'pointer',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box'
+                                }}>?</button>
                             )}
 
                             {view === "select" && (
