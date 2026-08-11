@@ -10,7 +10,7 @@
     <a href="https://developer.mozilla.org/en-US/docs/Web/HTML"><img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5" /></a>
     <a href="https://developer.mozilla.org/en-US/docs/Web/CSS"><img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3" /></a>
     <img src="https://img.shields.io/badge/Privacy-100%25_Offline-success?style=for-the-badge" alt="Privacy First" />
-    <img src="https://img.shields.io/badge/Version-1.2.63-8b5cf6?style=for-the-badge" alt="Version 1.2.63" />
+    <img src="https://img.shields.io/badge/Version-1.2.66-8b5cf6?style=for-the-badge" alt="Version 1.2.66" />
   </p>
 
   <i>Developed by: Abdulaziz Mashnawi</i>
