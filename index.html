@@ -450,6 +450,7 @@
             .brand-subtitle { font-size: 12px; }
             .progress-steps { gap: 5px; margin-top: 16px; }
             .progress-step { padding: 5px 8px; font-size: 11px; }
+            .saved-btn-text { display: none; }
             .app-content { padding: 20px 16px; }
             .upload-zone { padding: 46px 18px; }
             .theme-toggle-btn { width: 46px; height: 46px; font-size: 21px; right: 16px !important; bottom: 16px !important; }
@@ -1866,7 +1867,7 @@
                                 <div className={`progress-step ${view === "result" || view === "coop_result" ? "active" : ""}`}><span className="progress-number">3</span>الجدول</div>
                             </div>
 
-                            <button className="btn-animate" onClick={() => setSavedPanelOpen(true)} data-tooltip="عرض الجداول التي قمت بحفظها مسبقاً" style={{ position: "absolute", left: "20px", top: "15px", background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.45)", color: "white", borderRadius: "10px", padding: "7px 10px", fontSize: "12px", fontWeight: "bold", cursor: "pointer", display: "flex", alignItems: "center", gap: "5px" }}><Icon name="bookmark" style={{ margin: 0 }} /> المحفوظات {savedSchedules.length ? `(${savedSchedules.length})` : ""}</button>
+                            <button className="btn-animate" onClick={() => setSavedPanelOpen(true)} data-tooltip="عرض الجداول التي قمت بحفظها مسبقاً" style={{ position: "absolute", left: "20px", top: "15px", background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.45)", color: "white", borderRadius: "10px", padding: "0 10px", height: "32px", fontSize: "12px", fontWeight: "bold", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "5px", boxSizing: "border-box" }}><Icon name="bookmark" style={{ margin: 0 }} /> <span className="saved-btn-text">المحفوظات {savedSchedules.length ? `(${savedSchedules.length})` : ""}</span></button>
 
                             {view === "upload" && (
                                 <button className="btn-animate" onClick={() => setHelpModalOpen(true)} style={{
