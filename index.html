@@ -114,7 +114,7 @@
             display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.3s;
         }
         .footer span { color: #3b82f6; }
-        .help-list { text-align: right; margin: 0; padding-right: 20px; color: var(--text-muted); font-size: 15px; line-height: 1.8; }
+        .help-list { list-style: none; text-align: right; margin: 0; padding: 0; color: var(--text-muted); font-size: 15px; line-height: 1.8; }
         .help-list li { margin-bottom: 8px; }
         .help-list b { color: var(--text-main); }
 
@@ -1058,6 +1058,31 @@
             const [courseInstructors, setCourseInstructors] = useState({});
             const [settingsModalCourse, setSettingsModalCourse] = useState(null);
             const [deckHovered, setDeckHovered] = useState(false);
+            
+            const [deviceOS, setDeviceOS] = useState("unknown");
+            const [iosShortcutModalOpen, setIosShortcutModalOpen] = useState(false);
+            
+            useEffect(() => {
+                const ua = window.navigator.userAgent || window.navigator.vendor || window.opera;
+                let os = "unknown";
+                if (/windows phone/i.test(ua)) os = "Windows Phone";
+                else if (/android/i.test(ua)) os = "Android";
+                else if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) os = "iOS";
+                else if (/Macintosh|MacIntel|MacPPC|Mac68K/.test(ua)) os = "Mac OS";
+                else if (/Win32|Win64|Windows|WinCE/.test(ua)) os = "Windows";
+                else if (/Linux/.test(ua)) os = "Linux";
+                
+                setDeviceOS(os);
+                
+                if (os === "iOS") {
+                    try {
+                        if (!localStorage.getItem("iosShortcutModalShown")) {
+                            setIosShortcutModalOpen(true);
+                            localStorage.setItem("iosShortcutModalShown", "true");
+                        }
+                    } catch (e) {}
+                }
+            }, []);
 
             const [isClearing, setIsClearing] = useState(false);
             const [flippedCards, setFlippedCards] = useState(new Set());
@@ -1737,14 +1762,26 @@
 
                     <CustomModal isOpen={modal.isOpen} title={modal.title} message={modal.message} isError={modal.isError} onClose={closeModal} onConfirm={modal.onConfirm} closeText={modal.closeText} />
 
+                    <CustomModal isOpen={iosShortcutModalOpen} title="استخراج الجدول من الآيفون؟" isError={false} onClose={() => setIosShortcutModalOpen(false)}>
+                        <div style={{ textAlign: 'right', lineHeight: '1.8', color: 'var(--text-muted)' }}>
+                            <p style={{ marginBottom: '15px' }}>
+                                لاحظنا أنك تستخدم جهاز (iOS/iPadOS) 📱. للأسف، متصفح سفاري في الآيفون لا يدعم خاصية (Save as HTML) التي نحتاجها لاستخراج الجدول من موقع الجامعة.
+                            </p>
+                            <p style={{ marginBottom: '15px' }}>
+                                لا تقلق! قمنا ببرمجة أداة آمنة ورسمية عبر تطبيق "الاختصارات" (Shortcuts) الخاص بآبل لتمكينك من تحميل الصفحة بضغطة زر وبدون كمبيوتر.
+                            </p>
+                            <a href="https://www.icloud.com/shortcuts/14a81fd5947d4687b9d6979e6dd83658" target="_blank" rel="noreferrer" className="btn-animate" style={{ display: 'block', textAlign: 'center', background: 'var(--primary-color)', color: 'white', padding: '12px', borderRadius: '12px', textDecoration: 'none', fontWeight: 'bold', marginTop: '20px' }}>
+                                تحميل الأداة (HTML Scraper) 📥
+                            </a>
+                        </div>
+                    </CustomModal>
+
                     <CustomModal isOpen={helpModalOpen} title="طريقة استخراج الجدول" isError={false} onClose={() => setHelpModalOpen(false)}>
                         <ul className="help-list">
-                            <li><b>1.</b> سجل دخولك في بوابة النظام الأكاديمي (أكاديميا).</li>
-                            <li><b>2.</b> اذهب إلى قائمة <b>"المقررات المطروحة"</b>.</li>
-                            <li><b>3.</b> اختر الكلية والتخصص واضغط <b>"بحث"</b> لتظهر الجداول.</li>
-                            <li><b>4.</b> اضغط بزر الفأرة الأيمن في أي مكان بالشاشة، واختر <b>"حفظ كـ" (Save As)</b>.</li>
-                            <li><b>5.</b> في خيار "حفظ كنوع"، تأكد من اختيار <b>(Webpage, HTML Only)</b> واحفظ الملف.</li>
-                            <li><b>6.</b> ارجع لهذه الأداة وارفع الملف.</li>
+                            <li><b>1.</b> سجل دخولك في بوابة النظام الأكاديمي (جامعة جازان - المقررات المطروحة وفق الخطة).</li>
+                            <li><b>2.</b> اضغط بزر الفأرة الأيمن في أي مكان بالشاشة، واختر <b>"حفظ كـ" (Save As)</b>.</li>
+                            <li><b>3.</b> في خيار "حفظ كنوع"، تأكد من اختيار <b>(Webpage, HTML Only)</b> واحفظ الملف.</li>
+                            <li><b>4.</b> ارجع لهذه الأداة وارفع الملف.</li>
                         </ul>
                     </CustomModal>
 
@@ -2461,7 +2498,7 @@
                                 <DeveloperMenu text="عبدالعزيز مشنوي" />
                             </div>
                             <div style={{ fontSize: "12px", color: "var(--text-muted)", opacity: 0.8, fontWeight: "500" }}>
-                                الإصدار 1.0
+                                الإصدار 1.2.63
                             </div>
                         </footer>
                     </div>
