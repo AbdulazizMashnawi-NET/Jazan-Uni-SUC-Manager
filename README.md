@@ -1,75 +1,69 @@
-<div align="center">
-  <h1>Jazan Uni SUC Manager (JUSM)</h1>
-  
-  <p><b>A smart, ultra-fast, and highly interactive web application designed to help Jazan University students build, manage, and share their academic schedules with zero conflicts and maximum days off.</b></p>
+# Jazan Uni SUC Manager
 
-  <!-- Badges -->
-  <p>
-    <a href="https://reactjs.org/"><img src="https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React 18" /></a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/HTML"><img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5" /></a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/CSS"><img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3" /></a>
-    <img src="https://img.shields.io/badge/Privacy-100%25_Offline-success?style=for-the-badge" alt="Privacy First" />
-    <img src="https://img.shields.io/badge/Version-1.2.71-8b5cf6?style=for-the-badge" alt="Version 1.2.71" />
-  </p>
+A lightweight, browser-based schedule planner for Jazan University students. The project helps students upload their academic course pages, extract offered classes, and generate conflict-free timetables without relying on a server-side database or external processing.
 
-  <i>Developed by: Abdulaziz Mashnawi</i>
-</div>
+## Overview
 
----
+This tool was built to simplify the process of building a study timetable. Instead of manually checking each course combination, the app helps students:
 
-## About the Project
-**JUSM** is an independent, student-developed utility designed specifically for Jazan University students across all colleges and majors. The tool aims to simplify the process of extracting academic schedules from the official university portal, algorithmically analyzing them to build conflict-free schedules tailored to students' needs.
+- upload saved HTML pages from the university academic portal
+- select the courses they want to study
+- compare available sections and meeting times
+- detect time conflicts automatically
+- generate the best possible schedule combinations
+- prioritize schedules with more free days
+- share or export the final timetable
 
----
+## Main features
 
-## Key Features
-* **Smart Automated Scheduling:** Automatically calculates and generates all possible schedule combinations for your selected courses, instantly eliminating any time conflicts.
-* **Privacy & Security (100% Offline):** All calculations and file parsing happen strictly client-side within your browser. Your academic data is never uploaded to any server, ensuring complete privacy.
-* **Optimized Days Off:** A smart sorting algorithm prioritizes schedules that grant you the maximum number of days off per week.
-* **Smart Link Sharing:** Share your finalized schedule with colleagues instantly via a compact, minified URL.
-* **High-Resolution Export:** Save your schedule as a high-quality PNG image with a single click, perfect for sharing on WhatsApp or saving as a wallpaper.
-* **Modern User Interface:** Fully supports Dark and Light modes with smooth transitions and a premium Glassmorphism design for an exceptional user experience.
+- Automatic timetable generation
+- Conflict detection between selected courses and sections
+- Selection of preferred course sections
+- Sorting by number of free days or schedule quality
+- Offline-first browser workflow
+- Local data processing for privacy
+- Shareable schedule links
+- Export to image for easy saving or sharing
 
----
+## Tech stack
 
-## How to Use
-1. Log in to the University's Academic System (Edugate / Academia) and navigate to the "Offered Courses" page according to your study plan.
-2. Save the webpage to your device as **Webpage, HTML Only**.
-   - *(Note: If you are using an iOS device, you can use the built-in "HTML Scraper" shortcut tool provided on our site to easily download the page).*
-3. Open the **JUSM** application and upload the HTML file you just saved.
-4. Select the courses and sections you wish to register for.
-5. Click **"Generate Schedule"** and review the optimized options available to you.
+- HTML5
+- CSS3
+- JavaScript
+- Client-side logic only
 
----
+## How it works
 
-## Screenshots
+1. Open the application in a browser.
+2. Upload the saved university course page as an HTML file.
+3. Choose the courses and sections you need.
+4. Generate the timetable.
+5. Review the best available options and export or share the result.
 
-### Desktop
-| Dark Mode | Light Mode |
-|:---:|:---:|
-| ![PC-1B](Screenshots/PC-1B.png) | ![PC-1W](Screenshots/PC-1W.png) |
-| ![PC-2B](Screenshots/PC-2B.png) | ![PC-2W](Screenshots/PC-2W.png) |
-| ![PC-3B](Screenshots/PC-3B.png) | ![PC-3W](Screenshots/PC-3W.png) |
+## Why this project is useful
 
-### Mobile
-| Dark Mode | Light Mode |
-|:---:|:---:|
-| <img src="Screenshots/Phone-1B.jpeg" width="300"> | <img src="Screenshots/Phone-1W.jpeg" width="300"> |
-| <img src="Screenshots/Phone-2B.jpeg" width="300"> | <img src="Screenshots/Phone-2W.jpeg" width="300"> |
-| <img src="Screenshots/Phone-3B.jpeg" width="300"> | <img src="Screenshots/Phone-3W.jpeg" width="300"> |
+The project is designed for students who want a faster and clearer way to plan their academic schedule. It focuses on practicality, privacy, and simplicity, while keeping everything in the browser so data does not have to be uploaded to a remote server.
 
----
+## Running locally
 
-## Disclaimer
-> This tool is an **independent student initiative** and is not affiliated with, endorsed by, or connected to Jazan University or any official entity. It is designed solely as a planning utility and is NOT a substitute for official course registration. Selecting a schedule via this tool does not guarantee a seat in any section. **You must always complete your official add/drop process through the university's academic portal.**
+Because this is mainly a front-end project, you can run it by opening the app in a browser or serving the folder locally.
 
----
+```bash
+python -m http.server 8000
+```
 
-## Contact & Support
-If you have suggestions for improvement, encounter a bug, or wish to connect, please feel free to reach out via email:
-Email: [abdulazizmashnawi@gmail.com](mailto:abdulazizmashnawi@gmail.com)
+Then open:
 
-<br/>
-<div align="center">
-  <p>Built with passion for the students of Jazan University.</p>
-</div>
+```text
+http://localhost:8000
+```
+
+## Notes
+
+- This is a student-focused academic utility and not an official university system.
+- It is intended as a planning tool for students and should be used with care.
+- The app is designed to work locally in the browser and keep user data private.
+
+## License
+
+This project is shared for educational and personal use. Please check the repository for the current license details if one is included.
